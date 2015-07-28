@@ -1,6 +1,8 @@
 # ll-property-image
 
-An element providing a starting point for your own reusable Polymer elements.
+An element to allow a user to View/Edit images and their associated Metadata. (Title, Description, and is Default Thumbnail image).
+
+
 
 
 ## Dependencies
