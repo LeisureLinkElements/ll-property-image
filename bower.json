@@ -1,0 +1,33 @@
+{
+  "name": "ll-property-image",
+  "version": "1.0.0",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "seed"
+  ],
+  "main": "ll-property-image.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-image": "PolymerElements/iron-image#~1.0.2",
+    "iron-input": "PolymerElements/iron-input#~1.0.4"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*",
+    "test-fixture": "PolymerElements/test-fixture#~1.0.0",
+    "ui-bootstrap": "git@github.com:LeisureLink/ui-bootstrap.git#gh-pages"
+  }
+}

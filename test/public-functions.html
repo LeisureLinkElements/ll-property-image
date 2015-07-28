@@ -1,0 +1,28 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../ll-property-image.html">
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+  </head>
+  <body>
+
+
+  <test-fixture id="fixture">
+    <template>
+      <ll-property-image class="test2" img-name="dc134145.jpg" img-description="This is a description" src="http://lorempixel.com/600/400" img-sizing="contain" img-title="This is a title" is-default-image></ll-property-image>
+    </template>
+  </test-fixture>
+
+  <script src="scripts/public-functions.js"></script>
+
+  </body>
+</html>

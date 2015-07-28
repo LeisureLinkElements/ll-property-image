@@ -1,0 +1,372 @@
+<link rel='import' href='../polymer/polymer.html'>
+<link rel='import' href='../iron-image/iron-image.html'>
+<link rel='import' href='../iron-input/iron-input.html'>
+
+<!--
+Example:
+    <ll-property-image></ll-property-image>
+-->
+<dom-module id='ll-property-image'>
+
+  <style>
+
+    :host {
+      display: inline-block;
+      box-sizing: border-box;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      position: relative;
+      padding: 0 12px 50px 12px;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #0069aa;
+      font-weight: 300;
+      width: 250px;
+      margin: 16px 0 8px;
+    }
+
+    p {
+      font-size: 1em;
+    }
+
+    textarea {
+      resize: none;
+      display: block;
+      width: 100%;
+      height: 50px;
+      padding: 0;
+      border: solid #dddddd;
+      border-width: 1px 0 0 0;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      outline: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    input.inline-edit {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: none;
+      padding: 5px 0;
+      margin: 0;
+      outline: none;
+      font: inherit;
+      color: inherit;
+      line-height: inherit;
+      font-size: inherit;
+      text-align: inherit;
+      background-color: inherit;
+      vertical-align: top;
+    }
+
+    input.inline-edit:hover,
+    input.inline-edit:focus {
+      /* Change the background to a light yellow */
+      background-color: #FFD;
+
+      /* A subtle transition never hurts */
+      -webkit-transition: background-color 0.5s;
+      -moz-transition: background-color 0.5s;
+      -ie-transition: background-color 0.5s;
+      transition: background-color 0.5s;
+    }
+
+    .no-select {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .property-image-loading {
+      position: absolute;
+      left: calc(50% - 20px);
+      top: calc(50% - 20px);
+      z-index: 10;
+    }
+
+    iron-image, .property-image-default {
+      width: 250px;
+      height: 250px;
+      background-color: #f5f5f5;
+    }
+
+    :host:hover .menu {
+      display: block;
+    }
+
+    .icon-edit {
+      padding: 2px;
+    }
+
+    .menuOpen .menu {
+      display: block;
+      background-color: #6d84b4;
+      border: 1px solid #0069aa;
+      color: white;
+    }
+
+    .menuOpen .menu ul {
+      display: block;
+    }
+
+    .menu {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 2px;
+      position: absolute;
+      top: 70px;
+      right: 17px;
+      background-color: #cfd8dc;
+    }
+
+    .menu ul {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #ffffff;
+      padding: 0;
+      margin: 0;
+      color: #4d4d4f;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+      width: 150px;
+      font-size: 12px;
+    }
+
+    .menu ul li {
+      padding: 5px;
+      cursor: pointer;
+      line-height: 18px;
+    }
+
+    .menu ul li:hover {
+      background-color: #f5f5f5;
+    }
+
+    .menu ul li a {
+      padding: 5px;
+    }
+
+  </style>
+
+  <template>
+    <link rel='stylesheet' href='fonts/style.css'/>
+    <div id="main">
+      <h1>
+        <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{imgTitle::input}}>
+      </h1>
+      <img class='property-image-loading'
+           hidden$='[[hideSpinner(src, isLoaded)]]'
+           alt=''
+           src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K'/>
+      <img class='property-image-default'
+           hidden$='[[hideDefaultImage(src)]]'
+           alt=''
+           src='data:image/png;base64,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'
+           on-tap='closeMenu'/>
+      <iron-image
+          hidden='[[!hideDefaultImage(src)]]'
+          fade
+          preload
+          src='[[src]]'
+          sizing='[[imgSizing]]'
+          loaded='{{isLoaded}}'
+          loading='{{isLoading}}'
+          on-tap='closeMenu'>
+      </iron-image>
+
+      <div class='menu' on-tap='toggleMenu' id="menu">
+        <i class='icon-edit'></i>
+        <ul class="no-select">
+          <li on-tap='makeDefaultImage'>
+            <a>Make Default Image</a>
+          </li>
+          <li on-tap='deleteImage'>
+            <a>Delete Image</a>
+          </li>
+        </ul>
+      </div>
+      <textarea placeholder='Enter a description here...' value={{imgDescription::input}}></textarea>
+    </div>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'll-property-image',
+
+    properties: {
+      /**
+       * The Image URL
+       * If not provided, a default image will be shown as a placeholder.
+       * It is defaulted to an empty string, as any undefined value will result in the hideSpinner and hideDefault Image attributes to not be evaluated.
+       */
+      src: {
+        type: String,
+        value: '',
+        reflectToAttribute: true
+      },
+      /**
+       * Image Name
+       * This is expected, need to figure out how to make it required.
+       */
+      imgName: {
+        type: String
+      },
+      /**
+       * The Image Description.
+       * Optional
+       */
+      imgDescription: {
+        type: String,
+        value: this.imgDescription || '',
+        notify: true,
+        observer: '_metaDataChanged'
+      },
+      /**
+       * The Image Title
+       * Optional
+       * If not provided, will default to the image name.
+       */
+      imgTitle: {
+        type: String,
+        observer: '_metaDataChanged'
+      },
+      /**
+       * Used to track if the dropdown menu is visible.
+       */
+      menuOpen: {
+        type: Boolean,
+        value: false,
+        readOnly: true
+      },
+      /**
+       * Used to track if this is the default image in the gallery.
+       */
+      isDefaultImage: {
+        type: Boolean,
+        value: this.isDefaultImage || false
+      },
+      /**
+       * Possible values are contain or cover
+       * We might want to extend this to have an auto, that could determine which mode based on the image dimensions.
+       */
+      imgSizing: {
+        type: String,
+        value: 'cover'
+      },
+      /**
+       * Bound to the img-iron isLoaded. Used to show/hide elements based on the state.
+       */
+      isLoaded: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * Bound to the img-iron isLoading. Used to show/hide elements based on the state.
+       */
+      isLoading: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    ready: function() {
+      this.imgTitle = this.imgTitle || this.imgName;
+
+      this._imgDescription = this.imgDescription;
+      this._imgTitle = this.imgTitle;
+      this._dirty = false;
+
+      if (!this.imgName) {
+        throw "imgName is required";
+      }
+    },
+    /**
+     * Raises an event for deleting an image
+     * TODO: Need a confirmation dialog. Here or on the parent?
+     */
+    deleteImage: function() {
+      this.fire('ll-property-delete-image', { imgName: this.imgName });
+    },
+    /**
+     * Toggles the visibility on the Menu
+     */
+    toggleMenu: function() {
+      this._setMenuOpen(!this.menuOpen);
+      this.toggleClass('menuOpen', this.menuOpen, this.$.main);
+    },
+    /**
+     * Sets the visibility on the Menu to hidden
+     */
+    closeMenu: function() {
+      this._setMenuOpen(false);
+      this.toggleClass('menuOpen', false, this.$.main);
+    },
+    /**
+     * Toggles the Default Image value, and raises an event.
+     * TODO: Have a propery track this locally.
+     */
+    makeDefaultImage: function() {
+      this.isDefaultImage = !this.isDefaultImage;
+      this.fire('ll-property-default-image', { imgName: this.imgName });
+    },
+    /**
+     * Used to determine visibility on the Spinner
+     * @param src
+     * @param loaded
+     * @returns {boolean}
+     */
+    hideSpinner: function(src, loaded) {
+      return (src && loaded);
+    },
+    /**
+     * Used to determine if the default image should be shown.
+     * @param src
+     * @returns {boolean}
+     */
+    hideDefaultImage: function(src) {
+      return !!src;
+    },
+    setImageSrc: function(src) {
+      this.src = src;
+      return src;
+    },
+    isDirty: function() {
+      return this._dirty;
+    },
+    getChanges: function() {
+      return {
+        title: this.imgTitle,
+        description: this.imgDescription,
+        isDefaultImage: this.isDefaultImage
+      };
+      //TODO: return the new Title and Description fields
+    },
+    _metaDataChanged: function(newVal, oldVal) {
+
+      //make sure these values are set first
+      if (!this._imgTitle) {
+        return;
+      }
+
+      this._dirty = (this.imgDescription !== this._imgDescription || this.imgTitle !== this._imgTitle);
+    }
+  });
+
+</script>

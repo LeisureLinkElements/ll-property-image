@@ -1,0 +1,34 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>ll-property-image Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../ll-property-image.html">
+    <!--<link rel="stylesheet" href="../../ui-bootstrap/styles/vendor.css">-->
+    <!--<link rel="stylesheet" href="../../ui-bootstrap/styles/app.css">-->
+  </head>
+  <body>
+
+    <p>An example of <code>&lt;ll-property-image&gt;</code>:</p>
+
+    <!--<div>-->
+      <!--<button>Say Something</button>-->
+    <!--</div>-->
+
+    <ll-property-image img-name="dc134145.jpg" img-description="This is a description" is-default-image></ll-property-image>
+    <ll-property-image img-name="dc13416.jpg" img-title="Look at this awesome image" src="http://lorempixel.com/600/400" img-sizing="cover"></ll-property-image>
+    <ll-property-image img-name="dc13417.jpg" img-title="Look at this awesome image" src="http://lorempixel.com/100/400" img-sizing="contain"></ll-property-image>
+    <ll-property-image img-name="dc13418.jpg" img-title="Look at this awesome image" src="http://lorempixel.com/450/200"></ll-property-image>
+    <ll-property-image img-name="dc13420.jpg"></ll-property-image>
+
+    <script>
+      document.querySelector('button').addEventListener('click', function() {
+        alert(document.querySelector('ll-property-image').sayHello('Hallo!'));
+      });
+    </script>
+
+  </body>
+</html>

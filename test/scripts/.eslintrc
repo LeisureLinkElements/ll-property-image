@@ -1,0 +1,14 @@
+{
+  "globals": {
+    "expect": true,
+    "fixture": true
+  },
+  "env": {
+    "mocha": true
+  },
+  "rules":{
+    "no-unused-expressions": 0,
+    "curly": [2, "multi-line"],
+    "no-new": 1
+  }
+}
