@@ -4,7 +4,9 @@
 
 <!--
 Example:
-    <ll-property-image></ll-property-image>
+
+    <ll-property-image img-name="dc13416.jpg" img-title="My Kitchen" src="http://lorempixel.com/600/400" img-sizing="cover" is-default-image></ll-property-image>
+
 -->
 <dom-module id='ll-property-image'>
 
@@ -243,7 +245,7 @@ Example:
        */
       imgDescription: {
         type: String,
-        value: this.imgDescription || '',
+        value: '',
         notify: true,
         observer: '_metaDataChanged'
       },
@@ -269,7 +271,7 @@ Example:
        */
       isDefaultImage: {
         type: Boolean,
-        value: this.isDefaultImage || false
+        value: false
       },
       /**
        * Possible values are contain or cover
@@ -297,6 +299,8 @@ Example:
 
     ready: function() {
       this.imgTitle = this.imgTitle || this.imgName;
+      this.imgDescription = this.imgDescription || '';
+      this.isDefaultImage = this.isDefaultImage || false;
 
       this._imgDescription = this.imgDescription;
       this._imgTitle = this.imgTitle;
@@ -352,13 +356,26 @@ Example:
     hideDefaultImage: function(src) {
       return !!src;
     },
+    /**
+     * Method to change the image src.
+     * @param src
+     * @returns {*}
+     */
     setImageSrc: function(src) {
       this.src = src;
       return src;
     },
+    /**
+     * Method to return if the imgDescription or Title have been modified
+     * @returns {boolean|*}
+     */
     isDirty: function() {
       return this._dirty;
     },
+    /**
+     * Method to grab the Metadata that would be needed to save the changes.
+     * @returns {{title: (properties.imgTitle|{type, observer}|*|properties.imgName|{type}|string), description: (properties.imgDescription|{type, value, notify, observer}|*|string|string), isDefaultImage: *}}
+     */
     getChanges: function() {
       return {
         title: this.imgTitle,
@@ -367,6 +384,12 @@ Example:
       };
       //TODO: return the new Title and Description fields
     },
+    /**
+     * Method that watches for changes to the Title or Description. Will eval the changes and set the _dirty flag that is returned from the isDirty() method.
+     * @param newVal
+     * @param oldVal
+     * @private
+     */
     _metaDataChanged: function(newVal, oldVal) {
 
       //make sure these values are set first
