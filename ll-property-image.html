@@ -16,17 +16,13 @@ Example:
     :host {
       display: inline-block;
       box-sizing: border-box;
-
       position: relative;
-      /*padding: 0 0 43px 0;*/
       font-size: 18px;
       line-height: 16px;
     }
 
     h1 {
       font-size: 1.3em;
-      color: #0069aa;
-      font-weight: 300;
       margin: 16px 0 8px;
     }
 
@@ -99,33 +95,21 @@ Example:
     :host:hover .menu {
       display: block;
     }
-
-    .icon-edit {
-      padding: 2px;
-      font-size: 18px;
-    }
-
-    .menuOpen .menu {
-      display: block;
-      background-color: #6d84b4;
-      border: 1px solid #0069aa;
-      color: white;
-    }
-
     .menuOpen .menu ul {
       display: block;
     }
 
     .menu {
       display: none;
-      width: 20px;
-      height: 20px;
-      border: 1px solid #cccccc;
-      border-radius: 2px;
       position: absolute;
-      top: 68px;
-      right: 5px;
-      background-color: #cfd8dc;
+      top: 70px;
+      right: 15px;
+    }
+
+    .menu button {
+      padding: 2px 8px;
+      border-radius: 0;
+      font-size: 1.5rem;
     }
 
     .menu ul {
@@ -154,6 +138,7 @@ Example:
     .menu ul li a {
       padding: 5px;
       font-size: 12px;
+      color: #4D4D4A;
     }
 
     .thumbnail {
@@ -168,8 +153,8 @@ Example:
   </style>
 
   <template class="blah">
-    <link rel='stylesheet' href='fonts/style.css'/>
-    <div id="main baseballcard-container">
+    <!--<link rel='stylesheet' href='fonts/style.css'/>-->
+    <div id="main" class="baseballcard-container">
 
       <img class='property-image-loading'
            hidden$='[[hideSpinner(src, isLoaded)]]'
@@ -184,7 +169,9 @@ Example:
       </div>
 
       <div class='menu' on-tap='toggleMenu' id="menu">
-        <i class='icon-edit'></i>
+        <!--<i class='icon-edit'></i>-->
+        <button class="btn btn-default dropdown-toggle"><span class="entypo pencil"></span></button>
+
         <ul class="no-select">
           <li on-tap='makeDefaultImage'>
             <a>Make Default Image</a>
