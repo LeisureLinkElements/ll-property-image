@@ -3,6 +3,8 @@
 <link rel='import' href='../iron-input/iron-input.html'>
 <link rel='import' href='../ll-theme/ll-theme.html'>
 
+<link rel='import' href='../ll-token-field/ll-token-field.html'>
+
 <!--
 Example:
 
@@ -17,13 +19,14 @@ Example:
       display: inline-block;
       box-sizing: border-box;
       position: relative;
-      font-size: 18px;
-      line-height: 16px;
+      font-size: 1em;
+      line-height: 1.2em;
+      padding: 0 5px 15px !important; /*needs important or bootstrap will clobber it*/
     }
 
     h1 {
-      font-size: 1.3em;
-      margin: 16px 0 8px;
+      font-size: 1.2em;
+      margin: 0;
     }
 
     textarea {
@@ -31,17 +34,18 @@ Example:
       display: block;
       width: 100%;
       height: 50px;
-      bottom: 0;
-      left: 0;
       outline: none;
-      font-size: 14px;
-      line-height: 16px;
+      font-size: .8em;
+      line-height: 1.2em;
       border: 0;
+      padding: 3px 7px;
+      border-top: 1px solid #EEEFF2;
     }
 
     ul {
       list-style: none;
     }
+
     a:hover {
       text-decoration: none;
     }
@@ -102,7 +106,7 @@ Example:
     .menu {
       display: none;
       position: absolute;
-      top: 70px;
+      top: 42px;
       right: 15px;
     }
 
@@ -110,6 +114,7 @@ Example:
       padding: 2px 8px;
       border-radius: 0;
       font-size: 1.5rem;
+
     }
 
     .menu ul {
@@ -150,6 +155,18 @@ Example:
       max-height: 250px;
     }
 
+    ll-token-field {
+      height: 55px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 100%;
+      padding: 3px 3px;
+    }
+
+    #main.tagsOpen ll-token-field {
+      display: block;
+    }
+
   </style>
 
   <template class="blah">
@@ -164,13 +181,17 @@ Example:
         <h1>
           <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{imgTitle::input}}>
         </h1>
+
         <a id="propertyImage" class="img-link"></a>
-        <textarea placeholder='Enter a description here...' value={{imgDescription::input}}></textarea>
+        <ll-token-field tags$='[[tags]]' placeholder="Image tags..."></ll-token-field>
+        <textarea placeholder='Description...' value={{imgDescription::input}}></textarea>
       </div>
 
-      <div class='menu' on-tap='toggleMenu' id="menu">
+
+
+      <div class='menu' id="menu">
         <!--<i class='icon-edit'></i>-->
-        <button class="btn btn-default dropdown-toggle"><span class="entypo pencil"></span></button>
+        <button  tabindex="-1" id="pencil" on-tap='toggleMenu' class="btn btn-default dropdown-toggle"><span class="entypo pencil"></span></button>
 
         <ul class="no-select">
           <li on-tap='makeDefaultImage'>
@@ -181,6 +202,8 @@ Example:
           </li>
         </ul>
       </div>
+
+
 
     </div>
   </template>
@@ -235,10 +258,23 @@ Example:
         type: String,
         observer: '_metaDataChanged'
       },
+      tags: {
+        type: Array,
+        notify: true,
+        reflectToAttribute: true,
+        value: function() {
+          return [];
+        }
+      },
       /**
        * Used to track if the dropdown menu is visible.
        */
       menuOpen: {
+        type: Boolean,
+        value: false,
+        readOnly: true
+      },
+      tagsOpen: {
         type: Boolean,
         value: false,
         readOnly: true
@@ -294,8 +330,9 @@ Example:
       //adding styles for bootstrap
       this.toggleClass('col-xs-12', true, this);
       this.toggleClass('col-sm-6', true, this);
-      this.toggleClass('col-md-3', true, this);
-      this.toggleClass('baseballcard-container', true, this);
+      this.toggleClass('col-md-4', true, this);
+      this.toggleClass('col-lg-3', true, this);
+//      this.toggleClass('baseballcard-container', true, this);
     },
     /**
      * Raises an event for deleting an image
