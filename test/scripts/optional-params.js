@@ -8,15 +8,15 @@ describe('<ll-property-image> - Optional Inputs', function() {
   });
 
   it('should optionally take a imgSizing property', function() {
-    expect(element.imgSizing).to.be.eql('contain');
+    expect(element.sizing).to.be.eql('contain');
   });
 
   it('should optionally take a description', function() {
-    expect(element.imgDescription).to.be.eql('This is a description');
+    expect(element.description).to.be.eql('This is a description');
   });
 
   it('should optionally take a title', function() {
-    expect(element.imgTitle).to.be.eql('This is a title');
+    expect(element.title).to.be.eql('This is a title');
   });
 
   it('should optionally take a isDefaultImage property', function() {

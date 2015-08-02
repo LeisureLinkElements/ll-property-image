@@ -13,20 +13,20 @@ describe('<ll-property-image> - Optional Inputs', function() {
     });
 
     it('should change to dirty if the title is modified after loading', function() {
-      element.imgTitle = 'BLAH';
-      expect(element.imgTitle).to.be.eql('BLAH');
+      element.title = 'BLAH';
+      expect(element.title).to.be.eql('BLAH');
       expect(element.isDirty()).to.be.eql(true);
     });
 
     it('should be able to reset the dirty property if the value is set back to the original', function() {
-      element.imgTitle = 'This is a title';
-      expect(element.imgTitle).to.be.eql('This is a title');
+      element.title = 'This is a title';
+      expect(element.title).to.be.eql('This is a title');
       expect(element.isDirty()).to.be.eql(false);
     });
 
     it('should change to dirty if the description is modified after loading', function() {
-      element.imgDescription = 'This is my Kitchen';
-      expect(element.imgDescription).to.be.eql('This is my Kitchen');
+      element.description = 'This is my Kitchen';
+      expect(element.description).to.be.eql('This is my Kitchen');
       expect(element.isDirty()).to.be.equal(true);
     });
 
@@ -39,7 +39,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
     });
 
     it('should return the title, description, and tags', function() {
-      element.imgDescription = 'This is my Kitchen';
+      element.description = 'This is my Kitchen';
       expect(element.getChanges()).to.have.deep.property('title');
       expect(element.getChanges()).to.have.deep.property('description');
       expect(element.getChanges()).to.have.deep.property('tags');

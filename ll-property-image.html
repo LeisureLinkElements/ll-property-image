@@ -337,7 +337,7 @@ Example:
      * TODO: Need a confirmation dialog. Here or on the parent?
      */
     deleteImage: function() {
-      this.fire('ll-property-delete-image', { name: this.name });
+      this.fire('ll-property-image-delete', { name: this.name });
     },
     /**
      * Toggles the visibility on the Menu
@@ -359,7 +359,7 @@ Example:
      */
     makeDefaultImage: function() {
       this.isDefaultImage = !this.isDefaultImage;
-      this.fire('ll-property-default-image', { name: this.name });
+      this.fire('ll-property-image-default', { name: this.name });
     },
     /**
      * Used to determine visibility on the Spinner
