@@ -274,11 +274,6 @@ Example:
         value: false,
         readOnly: true
       },
-      tagsOpen: {
-        type: Boolean,
-        value: false,
-        readOnly: true
-      },
       /**
        * Used to track if this is the default image in the gallery.
        */
@@ -419,6 +414,7 @@ Example:
       return {
         title: this.imgTitle,
         description: this.imgDescription,
+        tags: this.tags,
         isDefaultImage: this.isDefaultImage
       };
       //TODO: return the new Title and Description fields

@@ -38,14 +38,16 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.getChanges()).to.be.ok;
     });
 
-    it('should return the title and description', function() {
+    it('should return the title, description, and tags', function() {
       element.imgDescription = 'This is my Kitchen';
       expect(element.getChanges()).to.have.deep.property('title');
       expect(element.getChanges()).to.have.deep.property('description');
+      expect(element.getChanges()).to.have.deep.property('tags');
       console.log(element.getChanges());
       expect(element.getChanges()).to.be.eql({
         title: 'This is a title',
         description: 'This is my Kitchen',
+        tags: ['Rufus', 'Garfield', 'Beavis'],
         isDefaultImage: true
       });
     });
