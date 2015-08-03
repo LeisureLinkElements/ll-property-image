@@ -54,10 +54,10 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.getChanges()).to.have.deep.property('title');
       expect(element.getChanges()).to.have.deep.property('description');
       expect(element.getChanges()).to.have.deep.property('tags');
-      expect(element.getChanges()).to.have.deep.property('id');
+      expect(element.getChanges()).to.have.deep.property('imgId');
       expect(element.getChanges()).to.be.eql({
         dirty: false,
-        id: '123456',
+        imgId: '123456',
         title: 'This is a title',
         description: 'This is a description',
         tags: ['Rufus', 'Garfield', 'Beavis'],

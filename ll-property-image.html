@@ -215,10 +215,10 @@ Example:
 
     properties: {
       /**
-       * The unique identifer for the image
+       * The unique identifier for the image
        * This is required.
        */
-      id: {
+      imgId: {
         type: String
       },
       /**
@@ -327,8 +327,8 @@ Example:
       this._tags = this.tags;
       this._dirty = false;
 
-      if (!this.name || !this.id) {
-        throw '"Name" and "id" are required';
+      if (!this.name || !this.imgId) {
+        throw '"name" and "imgId" are required';
       }
 
       this.setImageSrc(this.src);
@@ -347,7 +347,7 @@ Example:
      */
     deleteImage: function() {
       this.fire('ll-property-image-delete', {
-        id: this.id,
+        imgId: this.imgId,
         name: this.name
       });
     },
@@ -357,7 +357,7 @@ Example:
     makeDefaultImage: function() {
       this.isDefaultImage = !this.isDefaultImage;
       this.fire('ll-property-image-default', {
-        id: this.id,
+        imgId: this.imgId,
         name: this.name,
         isDefaultImage: this.isDefaultImage
       });
@@ -408,7 +408,7 @@ Example:
     getChanges: function() {
       return {
         dirty: this._dirty,
-        id: this.id,
+        imgId: this.imgId,
         title: this.title,
         description: this.description,
         tags: this.tags,
