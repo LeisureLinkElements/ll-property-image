@@ -11,7 +11,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
     it('should raise an event for delete', function() {
 
       element.addEventListener('ll-property-image-delete', function(event) {
-        expect(event.detail).to.be.eql({ name: 'dc134145.jpg' });
+        expect(event.detail).to.be.eql({ id: '1234567', name: 'dc134145.jpg' });
       });
 
       element.deleteImage();
@@ -19,7 +19,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
 
     it('should raise an event for Make Default Image', function() {
       element.addEventListener('ll-property-image-default', function(event) {
-        expect(event.detail).to.be.eql({ name: 'dc134145.jpg' });
+        expect(event.detail).to.be.eql({ id: '1234567', name: 'dc134145.jpg', isDefaultImage: false });
       });
 
       element.makeDefaultImage();

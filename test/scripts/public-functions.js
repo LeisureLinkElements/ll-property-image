@@ -30,6 +30,18 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.isDirty()).to.be.equal(true);
     });
 
+    it('should be able to reset the dirty property if the value is set back to the original', function() {
+      element.description = 'This is a description';
+      expect(element.description).to.be.eql('This is a description');
+      expect(element.isDirty()).to.be.equal(false);
+    });
+
+    it('should change to dirty if the tags are modified after loading', function() {
+      element.tags = '["1"]';
+      expect(element.tags).to.be.eql('["1"]');
+      expect(element.isDirty()).to.be.eql(true);
+    });
+
   });
 
   describe('getChanges()', function() {
@@ -39,14 +51,15 @@ describe('<ll-property-image> - Optional Inputs', function() {
     });
 
     it('should return the title, description, and tags', function() {
-      element.description = 'This is my Kitchen';
       expect(element.getChanges()).to.have.deep.property('title');
       expect(element.getChanges()).to.have.deep.property('description');
       expect(element.getChanges()).to.have.deep.property('tags');
-      console.log(element.getChanges());
+      expect(element.getChanges()).to.have.deep.property('id');
       expect(element.getChanges()).to.be.eql({
+        dirty: false,
+        id: '123456',
         title: 'This is a title',
-        description: 'This is my Kitchen',
+        description: 'This is a description',
         tags: ['Rufus', 'Garfield', 'Beavis'],
         isDefaultImage: true
       });
