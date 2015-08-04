@@ -37,9 +37,14 @@ describe('<ll-property-image> - Optional Inputs', function() {
     });
 
     it('should change to dirty if the tags are modified after loading', function() {
-      element.tags = '["1"]';
-      expect(element.tags).to.be.eql('["1"]');
-      expect(element.isDirty()).to.be.eql(true);
+      element.addEventListener('ll-token-modified', function() {
+         expect(element.tags).to.be.eql(['1']);
+        expect(element.isDirty()).to.be.eql(true);
+      });
+
+      expect(element.isDirty()).to.be.eql(false);
+      element.tags = ['1'];
+      element.$.tags.tagChanged();
     });
 
   });
