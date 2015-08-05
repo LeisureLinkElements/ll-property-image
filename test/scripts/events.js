@@ -30,7 +30,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
         expect(event.detail).to.be.ok;
       });
 
-      element.handleDragEnd();
+      element._handleDragEnd();
     });
   });
 

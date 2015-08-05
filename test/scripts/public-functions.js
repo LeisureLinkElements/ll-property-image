@@ -93,6 +93,13 @@ describe('<ll-property-image> - Optional Inputs', function() {
       element.setSortOrder(3);
       expect(element.sortOrder).to.be.eql(3);
     });
+
+    it('should update isDirty when the sortOrder has been modified', function() {
+
+      expect(element.isDirty()).to.be.eql(false);
+      element.setSortOrder(4);
+      expect(element.isDirty()).to.be.eql(true);
+    });
   });
 
 });

@@ -27,6 +27,10 @@ Example:
       outline: 2px dashed #ddd;
     }
 
+    :host.dragging {
+      opacity: 0.4;
+    }
+
     h1 {
       font-size: 1.2em;
       margin: 0;
@@ -289,7 +293,8 @@ Example:
        */
       sortOrder: {
         type: Number,
-        value: 1
+        value: 1,
+        observer: '_metaDataChanged'
       },
       /**
        * Used to track if the dropdown menu is visible.
@@ -338,6 +343,7 @@ Example:
       this._description = this.description;
       this._title = this.title;
       this._tags = this.tags;
+      this._sortOrder = this.sortOrder;
       this._dirty = false;
 
       if (!this.name || !this.imgId) {
@@ -348,12 +354,12 @@ Example:
 
       //The following items are set to enable drag/drop functionality
       this.setAttribute('draggable', true);
-      this.addEventListener('dragstart', this.handleDragStart, false);
-      this.addEventListener('dragenter', this.handleDragEnter, false);
-      this.addEventListener('dragover', this.handleDragOver, false);
-      this.addEventListener('dragleave', this.handleDragLeave, false);
-      this.addEventListener('drop', this.handleDrop, false);
-      this.addEventListener('dragend', this.handleDragEnd, false);
+      this.addEventListener('dragstart', this._handleDragStart, false);
+      this.addEventListener('dragenter', this._handleDragEnter, false);
+      this.addEventListener('dragover', this._handleDragOver, false);
+      this.addEventListener('dragleave', this._handleDragLeave, false);
+      this.addEventListener('drop', this._handleDrop, false);
+      this.addEventListener('dragend', this._handleDragEnd, false);
 
     },
     created: function() {
@@ -437,6 +443,17 @@ Example:
         sortOrder: this.sortOrder
       };
     },
+
+
+    /**
+     * Public method to set the sortOrder
+     * @param order
+     * returns this.sortOrder
+     */
+    setSortOrder: function(order) {
+      this.sortOrder = order;
+      return this.sortOrder;
+    },
     /**
      * Method that watches for changes to the Title or Description. Will eval the changes and set the _dirty flag that is returned from the isDirty() method.
      * @param newVal
@@ -450,7 +467,10 @@ Example:
         return;
       }
 
-      this._dirty = (this.description !== this._description || this.title !== this._title || JSON.stringify(this.tags) !== JSON.stringify(this._tags));
+      this._dirty = (this.description !== this._description ||
+      this.title !== this._title ||
+      JSON.stringify(this.tags) !== JSON.stringify(this._tags) ||
+      this.sortOrder !== this._sortOrder);
     },
     /**
      * Method that watches for the image src to change, and updates the DOM element.
@@ -483,42 +503,78 @@ Example:
       this._setMenuOpen(false);
       this.toggleClass('menuOpen', false, this.$.main);
     },
+    /**
+     * This is called when the ll-token-modified event is received.
+     * @private
+     */
     _tagsChanged: function() {
       this.tags = this.tags.splice(0);
       this._metaDataChanged();
     },
-    handleDragStart: function(e) {
-      this.style.opacity = '0.4';
+    /**
+     * Drag start
+     * Sets up the dataTransfer object and set the opacity to indicate a visual clue that you are dragging the element.
+     * @private
+     * @param e
+     */
+    _handleDragStart: function(e) {
+      this.toggleClass('dragging', true, this);
 
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData("text/plain", this.id);  //todo - verify 'this'
     },
-    handleDragOver: function(e) {
+    /**
+     * Drag Over
+     * Used for styling
+     * @private
+     * @param e
+     * @returns {boolean}
+     */
+    _handleDragOver: function(e) {
       if (e.preventDefault) {
         e.preventDefault();
       }
-      //This could be more performant in the handleDragEnter, but it was having issues there.
+      //Could also live in the DragEnter.
       this.toggleClass('over', true, this);
 
       e.dataTransfer.dropEffect = 'move';
       return false;
     },
-    handleDragEnter: function() {
+    /**
+     * @private
+     * Similar to Drag over, however it fires less frequently
+     */
+    _handleDragEnter: function() {
 //      this.toggleClass('over', true, this);
     },
-    handleDragLeave: function() {
+    /**
+     * Drag Leave
+     * Used to remove the styling
+     * @private
+     */
+    _handleDragLeave: function() {
       this.toggleClass('over', false, this);
     },
-    handleDrop: function(e) {
+    /**
+     * Drop
+     * This handles the drop event. e will contain the dataTranser object that was prepared in the DragStart
+     * As long as the drop target is a valid target, it will raise the even 'll-property-image-drag' event
+     * e.StopPropagation stops the browser from redirecting
+     * @private
+     * @param e
+     * @returns {boolean}
+     */
+    _handleDrop: function(e) {
+
+      e.preventDefault();
       if (e.stopPropagation) {
-        e.stopPropagation(); // stops the browser from redirecting.
+        e.stopPropagation();
       }
 
       var _draggingImg = e.dataTransfer.getData("text/plain");
       var _droppedOnto = this.id;
 
       if (_draggingImg !== _droppedOnto) {
-        console.log('Move', _draggingImg, 'before', _droppedOnto);
         this.fire('ll-property-image-drag', {
           item: _draggingImg,
           target: _droppedOnto
@@ -526,14 +582,29 @@ Example:
       }
       return false;
     },
-    handleDragEnd: function(e) {
-      //fire an event that will clean up styles
-      //for now, just clean up its own styles.
-
-      this.style.opacity = '1.0';
-
+    /**
+     * Drag End
+     * This method is fired when the drag is completed
+     * We will use this to cleanup any styles on this object
+     * An event will be raised so that other elements can clean up their styles
+     * Raises 'll-property-image-drag-cleanup'
+     * @private
+     * @param e
+     */
+    _handleDragEnd: function(e) {
+      this.resetDropStyles();
       this.fire('ll-property-image-drag-cleanup');
+    },
+    /**
+     * Used to reset the UI cues.
+     * @public
+     */
+        //TODO - test
+    resetDropStyles: function() {
+      this.toggleClass('dragging', false, this);
+      this.toggleClass('over', false, this);
     }
+
   });
 
 </script>
