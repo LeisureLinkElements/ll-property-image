@@ -23,6 +23,10 @@ Example:
       padding: 0 5px 15px !important; /*needs important or bootstrap will clobber it*/
     }
 
+    :host.over {
+      outline: 2px dashed #ddd;
+    }
+
     h1 {
       font-size: 1.2em;
       margin: 0;
@@ -169,7 +173,7 @@ Example:
 
   </style>
 
-  <template class="blah">
+  <template>
     <div id="main" class="baseballcard-container">
 
       <div class="thumbnail baseballcard" on-tap='_closeMenu'>
@@ -280,6 +284,14 @@ Example:
         }
       },
       /**
+       * Order - Used to show what order the images should be displayed in
+       * Defaults to 1
+       */
+      sortOrder: {
+        type: Number,
+        value: 1
+      },
+      /**
        * Used to track if the dropdown menu is visible.
        */
       menuOpen: {
@@ -335,6 +347,15 @@ Example:
 
       this.setImageSrc(this.src);
 
+      //The following items are set to enable drag/drop functionality
+      this.setAttribute('draggable', true);
+      this.addEventListener('dragstart', this.handleDragStart, false);
+      this.addEventListener('dragenter', this.handleDragEnter, false);
+      this.addEventListener('dragover', this.handleDragOver, false);
+      this.addEventListener('dragleave', this.handleDragLeave, false);
+      this.addEventListener('drop', this.handleDrop, false);
+      this.addEventListener('dragend', this.handleDragEnd, false);
+
     },
     created: function() {
       //adding styles for bootstrap
@@ -342,7 +363,6 @@ Example:
       this.toggleClass('col-sm-6', true, this);
       this.toggleClass('col-md-4', true, this);
       this.toggleClass('col-lg-3', true, this);
-//      this.toggleClass('baseballcard-container', true, this);
     },
     /**
      * Raises an event for deleting an image
@@ -414,7 +434,8 @@ Example:
         title: this.title,
         description: this.description,
         tags: this.tags,
-        isDefaultImage: this.isDefaultImage
+        isDefaultImage: this.isDefaultImage,
+        sortOrder: this.sortOrder
       };
     },
     /**
@@ -466,6 +487,53 @@ Example:
     _tagsChanged: function() {
       this.tags = this.tags.splice(0);
       this._metaDataChanged();
+    },
+    handleDragStart: function(e) {
+      this.style.opacity = '0.4';
+
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData("text/plain", this.id);  //todo - verify 'this'
+    },
+    handleDragOver: function(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      //This could be more performant in the handleDragEnter, but it was having issues there.
+      this.toggleClass('over', true, this);
+
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    },
+    handleDragEnter: function() {
+//      this.toggleClass('over', true, this);
+    },
+    handleDragLeave: function() {
+      this.toggleClass('over', false, this);
+    },
+    handleDrop: function(e) {
+      if (e.stopPropagation) {
+        e.stopPropagation(); // stops the browser from redirecting.
+      }
+
+      var _draggingImg = e.dataTransfer.getData("text/plain");
+      var _droppedOnto = this.id;
+
+      if (_draggingImg !== _droppedOnto) {
+        console.log('Move', _draggingImg, 'before', _droppedOnto);
+        this.fire('ll-property-image-drag', {
+          item: _draggingImg,
+          target: _droppedOnto
+        });
+      }
+      return false;
+    },
+    handleDragEnd: function(e) {
+      //fire an event that will clean up styles
+      //for now, just clean up its own styles.
+
+      this.style.opacity = '1.0';
+
+      this.fire('ll-property-image-drag-cleanup');
     }
   });
 

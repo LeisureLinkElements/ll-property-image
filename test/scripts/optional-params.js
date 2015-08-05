@@ -22,4 +22,8 @@ describe('<ll-property-image> - Optional Inputs', function() {
   it('should optionally take a isDefaultImage property', function() {
     expect(element.isDefaultImage).to.be.eql(true);
   });
+
+  it('should optionally take a sortOrder property', function() {
+    expect(element.sortOrder).to.be.eql(2);
+  })
 });
