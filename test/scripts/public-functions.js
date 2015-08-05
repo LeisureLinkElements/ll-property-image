@@ -13,21 +13,38 @@ describe('<ll-property-image> - Optional Inputs', function() {
     });
 
     it('should change to dirty if the title is modified after loading', function() {
-      element.imgTitle = 'BLAH';
-      expect(element.imgTitle).to.be.eql('BLAH');
+      element.title = 'BLAH';
+      expect(element.title).to.be.eql('BLAH');
       expect(element.isDirty()).to.be.eql(true);
     });
 
     it('should be able to reset the dirty property if the value is set back to the original', function() {
-      element.imgTitle = 'This is a title';
-      expect(element.imgTitle).to.be.eql('This is a title');
+      element.title = 'This is a title';
+      expect(element.title).to.be.eql('This is a title');
       expect(element.isDirty()).to.be.eql(false);
     });
 
     it('should change to dirty if the description is modified after loading', function() {
-      element.imgDescription = 'This is my Kitchen';
-      expect(element.imgDescription).to.be.eql('This is my Kitchen');
+      element.description = 'This is my Kitchen';
+      expect(element.description).to.be.eql('This is my Kitchen');
       expect(element.isDirty()).to.be.equal(true);
+    });
+
+    it('should be able to reset the dirty property if the value is set back to the original', function() {
+      element.description = 'This is a description';
+      expect(element.description).to.be.eql('This is a description');
+      expect(element.isDirty()).to.be.equal(false);
+    });
+
+    it('should change to dirty if the tags are modified after loading', function() {
+      element.addEventListener('ll-token-modified', function() {
+         expect(element.tags).to.be.eql(['1']);
+        expect(element.isDirty()).to.be.eql(true);
+      });
+
+      expect(element.isDirty()).to.be.eql(false);
+      element.tags = ['1'];
+      element.$.tags.tagChanged();
     });
 
   });
@@ -38,14 +55,17 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.getChanges()).to.be.ok;
     });
 
-    it('should return the title and description', function() {
-      element.imgDescription = 'This is my Kitchen';
+    it('should return the title, description, and tags', function() {
       expect(element.getChanges()).to.have.deep.property('title');
       expect(element.getChanges()).to.have.deep.property('description');
-      console.log(element.getChanges());
+      expect(element.getChanges()).to.have.deep.property('tags');
+      expect(element.getChanges()).to.have.deep.property('imgId');
       expect(element.getChanges()).to.be.eql({
+        dirty: false,
+        imgId: '123456',
         title: 'This is a title',
-        description: 'This is my Kitchen',
+        description: 'This is a description',
+        tags: ['Rufus', 'Garfield', 'Beavis'],
         isDefaultImage: true
       });
     });
