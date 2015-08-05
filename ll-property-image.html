@@ -169,7 +169,7 @@ Example:
 
   </style>
 
-  <template class="blah">
+  <template>
     <div id="main" class="baseballcard-container">
 
       <div class="thumbnail baseballcard" on-tap='_closeMenu'>
@@ -321,9 +321,8 @@ Example:
 
     ready: function() {
       this.title = this.title || this.name;
-      this.description = this.description || '';
-      this.isDefaultImage = this.isDefaultImage || false;
 
+      //storing off copies of these values so we can use them to check for isDirty
       this._description = this.description;
       this._title = this.title;
       this._tags = this.tags;
