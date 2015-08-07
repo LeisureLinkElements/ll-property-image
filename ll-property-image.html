@@ -9,6 +9,7 @@ Example:
 
     <ll-property-image id="1234" img-name="dc13416.jpg" img-title="My Kitchen" src="http://lorempixel.com/600/400" img-sizing="cover" tags="['1','2']" is-default-image></ll-property-image>
 
+@demo
 -->
 <dom-module id='ll-property-image'>
 
@@ -521,7 +522,7 @@ Example:
       this.toggleClass('dragging', true, this);
 
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData("text/plain", this.id);  //todo - verify 'this'
+      e.dataTransfer.setData("text/plain", this.imgId);
     },
     /**
      * Drag Over
@@ -545,7 +546,7 @@ Example:
      * Similar to Drag over, however it fires less frequently
      */
     _handleDragEnter: function() {
-//      this.toggleClass('over', true, this);
+      //moved the styling to the _handleDragOver
     },
     /**
      * Drag Leave
@@ -565,14 +566,13 @@ Example:
      * @returns {boolean}
      */
     _handleDrop: function(e) {
-
       e.preventDefault();
       if (e.stopPropagation) {
         e.stopPropagation();
       }
 
       var _draggingImg = e.dataTransfer.getData("text/plain");
-      var _droppedOnto = this.id;
+      var _droppedOnto = this.imgId;
 
       if (_draggingImg !== _droppedOnto) {
         this.fire('ll-property-image-drag', {
@@ -599,7 +599,6 @@ Example:
      * Used to reset the UI cues.
      * @public
      */
-        //TODO - test
     resetDropStyles: function() {
       this.toggleClass('dragging', false, this);
       this.toggleClass('over', false, this);
