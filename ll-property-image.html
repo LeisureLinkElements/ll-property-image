@@ -363,8 +363,8 @@ Example:
       this.addEventListener('dragover', this._handleDragOver, false);
       this.addEventListener('dragleave', this._handleDragLeave, false);
       this.addEventListener('drop', this._handleDrop, false);
-      this.addEventListener('dragend', this._handleDragEnd(this), false);
-      this.$.imageContainer.addEventListener('mouseleave', this._handleMouseLeave, false);
+      this.addEventListener('dragend', this._handleDragEnd, false);
+      this.$.imageContainer.addEventListener('mouseleave', this._handleMouseLeave.bind(this), false);
 
     },
     created: function() {
@@ -597,7 +597,6 @@ Example:
      * An event will be raised so that other elements can clean up their styles
      * Raises 'll-property-image-drag-cleanup'
      * @private
-     * @param e
      */
     _handleDragEnd: function() {
       this.resetDropStyles();
@@ -612,12 +611,7 @@ Example:
       this.toggleClass('over', false, this);
     },
     _handleMouseLeave: function() {
-      var _element= this;
-      while(!_element.hasOwnProperty('imgId')) {
-        _element = _element.parentNode;
-      }
-      _element._closeMenu();
-
+      this._closeMenu();
     }
 
   });
