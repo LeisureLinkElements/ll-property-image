@@ -1,6 +1,6 @@
 {
   "name": "ll-property-image",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     "Anonymous <anonymous@example.com>"
   ],
@@ -24,7 +24,7 @@
     "iron-input": "PolymerElements/iron-input#~1.0.4",
     "ll-token-field": "LeisureLinkElements/ll-token-field",
     "ll-throbber": "LeisureLinkElements/ll-throbber#cog-only",
-    "ll-theme": "LeisureLinkElements/ll-theme#color-variables"
+    "ll-theme": "LeisureLinkElements/ll-theme#~0.0.2"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
