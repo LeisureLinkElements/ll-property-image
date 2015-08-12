@@ -22,7 +22,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0",
     "iron-input": "PolymerElements/iron-input#~1.0.4",
-    "ll-token-field": "LeisureLinkElements/ll-token-field"
+    "ll-token-field": "LeisureLinkElements/ll-token-field",
+    "ll-throbber": "LeisureLinkElements/ll-throbber#cog-only"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
