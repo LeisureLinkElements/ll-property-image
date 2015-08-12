@@ -159,6 +159,12 @@ input.inline-edit:focus {
   position: relative;
 }
 
+.thumbnail a:hover {
+  cursor:grab;
+  cursor:-moz-grab;
+  cursor:-webkit-grab;
+}
+
 ll-token-field {
   height: 55px;
   overflow-x: hidden;
