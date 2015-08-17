@@ -8,6 +8,9 @@
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <script src="../../sinonjs/sinon.js"></script>
+    <script src="../node_modules/drag-mock/dist/drag-mock.js"></script>
+
 
     <!-- Step 1: import the element to test -->
     <link rel="import" href="../ll-property-image.html">
@@ -18,11 +21,12 @@
 
   <test-fixture id="fixture">
     <template>
-      <ll-property-image sort-order="2" class="test2" img-id="12345" name="dc134145.jpg" description="This is a description" src="http://lorempixel.com/600/400" sizing="contain" title="This is a title" is-default-image></ll-property-image>
+      <ll-property-image img-id="1" sort-order="1" class="test1" name="dc134145.jpg" src="http://lorempixel.com/600/400"></ll-property-image>
+      <ll-property-image img-id="2" sort-order="2" class="test1" name="dc134145.jpg" src="http://lorempixel.com/600/400"></ll-property-image>
     </template>
   </test-fixture>
 
-  <script src="scripts/optional-params.js"></script>
+  <script src="scripts/drag-drop.js"></script>
 
   </body>
 </html>

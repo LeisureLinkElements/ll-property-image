@@ -60,13 +60,15 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.getChanges()).to.have.deep.property('description');
       expect(element.getChanges()).to.have.deep.property('tags');
       expect(element.getChanges()).to.have.deep.property('imgId');
+      expect(element.getChanges()).to.have.deep.property('sortOrder');
       expect(element.getChanges()).to.be.eql({
         dirty: false,
         imgId: '123456',
         title: 'This is a title',
         description: 'This is a description',
         tags: ['Rufus', 'Garfield', 'Beavis'],
-        isDefaultImage: true
+        isDefaultImage: true,
+        sortOrder: 2
       });
     });
 
@@ -82,6 +84,21 @@ describe('<ll-property-image> - Optional Inputs', function() {
       var url = 'http://lorempixel.com/100/200';
       element.setImageSrc(url);
       expect(element.src).to.be.eql(url);
+    });
+  });
+
+  describe('setSortOrder()', function() {
+
+    it('should be able to update the sortOrder property', function() {
+      element.setSortOrder(3);
+      expect(element.sortOrder).to.be.eql(3);
+    });
+
+    it('should update isDirty when the sortOrder has been modified', function() {
+
+      expect(element.isDirty()).to.be.eql(false);
+      element.setSortOrder(4);
+      expect(element.isDirty()).to.be.eql(true);
     });
   });
 

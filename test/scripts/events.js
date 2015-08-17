@@ -24,7 +24,17 @@ describe('<ll-property-image> - Optional Inputs', function() {
 
       element.makeDefaultImage();
     });
+
+    it('should raise an event for cleaning up styles after a drag drop', function() {
+      element.addEventListener('ll-property-image-drag-cleanup', function(event) {
+        expect(event.detail).to.be.ok;
+      });
+
+      element._handleDragEnd();
+    });
   });
+
+
 
 
 });
