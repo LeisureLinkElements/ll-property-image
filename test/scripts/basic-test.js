@@ -24,8 +24,8 @@ describe('<ll-property-image> - Required Inputs', function() {
     expect(element.title).to.be.eql(element.name);
   });
 
-  it('should default the isDefaultImage property to false if it is not provided', function() {
-    expect(element.isDefaultImage).to.be.eql(false);
+  it('should default the isDefault property to false if it is not provided', function() {
+    expect(element.isDefault).to.be.eql(false);
   });
 
   it('should default the sortOrder if it is not provided', function() {

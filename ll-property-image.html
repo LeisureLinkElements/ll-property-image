@@ -8,7 +8,7 @@
 <!--
 Example:
 
-    <ll-property-image id="1234" img-name="dc13416.jpg" img-title="My Kitchen" src="http://lorempixel.com/600/400" img-sizing="cover" tags="['1','2']" is-default-image></ll-property-image>
+    <ll-property-image id="1234" img-name="dc13416.jpg" img-title="My Kitchen" src="http://lorempixel.com/600/400" img-sizing="cover" tags="['1','2']" is-default></ll-property-image>
 
 @demo
 -->
@@ -145,7 +145,7 @@ Example:
       /**
        * Used to track if this is the default image in the gallery.
        */
-      isDefaultImage: {
+      isDefault: {
         type: Boolean,
         value: false
       },
@@ -177,12 +177,8 @@ Example:
     ready: function() {
       this.title = this.title || this.name;
 
-      //storing off copies of these values so we can use them to check for isDirty
-      this._description = this.description;
-      this._title = this.title;
-      this._tags = this.tags;
-      this._sortOrder = this.sortOrder;
-      this._dirty = false;
+
+      this.resetDirtyStatus();
 
       if (!this.name || !this.imgId) {
         throw '"name" and "imgId" are required';
@@ -221,11 +217,11 @@ Example:
      * Toggles the Default Image value, and raises an event.
      */
     makeDefaultImage: function() {
-      this.isDefaultImage = !this.isDefaultImage;
+      this.isDefault = !this.isDefault;
       this.fire('ll-property-image-default', {
         imgId: this.imgId,
         name: this.name,
-        isDefaultImage: this.isDefaultImage
+        isDefault: this.isDefault
       });
     },
     /**
@@ -269,7 +265,7 @@ Example:
     },
     /**
      * Method to grab the Metadata that would be needed to save the changes.
-     * @returns {{title: (properties.title|{type, observer}|*|properties.name|{type}|string), description: (properties.description|{type, value, notify, observer}|*|string|string), isDefaultImage: *}}
+     * @returns {{title: (properties.title|{type, observer}|*|properties.name|{type}|string), description: (properties.description|{type, value, notify, observer}|*|string|string), isDefault: *}}
      */
     getChanges: function() {
       return {
@@ -278,7 +274,7 @@ Example:
         title: this.title,
         description: this.description,
         tags: this.tags,
-        isDefaultImage: this.isDefaultImage,
+        isDefault: this.isDefault,
         sortOrder: this.sortOrder
       };
     },
@@ -292,6 +288,14 @@ Example:
     setSortOrder: function(order) {
       this.sortOrder = order;
       return this.sortOrder;
+    },
+    resetDirtyStatus: function() {
+      //storing off copies of these values so we can use them to check for isDirty
+      this._description = this.description;
+      this._title = this.title;
+      this._tags = this.tags;
+      this._sortOrder = this.sortOrder;
+      this._dirty = false;
     },
     /**
      * Method that watches for changes to the Title or Description. Will eval the changes and set the _dirty flag that is returned from the isDirty() method.
