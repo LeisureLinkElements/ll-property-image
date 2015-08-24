@@ -67,7 +67,6 @@ describe('<ll-property-image> - Optional Inputs', function() {
         title: 'This is a title',
         description: 'This is a description',
         tags: ['Rufus', 'Garfield', 'Beavis'],
-        isDefault: true,
         sortOrder: 2
       });
     });
