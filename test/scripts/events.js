@@ -19,7 +19,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
 
     it('should raise an event for Make Default Image', function() {
       element.addEventListener('ll-property-image-default', function(event) {
-        expect(event.detail).to.be.eql({ imgId: '1234567', name: 'dc134145.jpg', isDefault: false });
+        expect(event.detail).to.be.eql({ imgId: '1234567', name: 'dc134145.jpg', isDefault: false, src: 'http://lorempixel.com/600/400' });
       });
 
       element.makeDefaultImage();
