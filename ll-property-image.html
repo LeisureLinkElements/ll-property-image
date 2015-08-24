@@ -293,7 +293,6 @@ Example:
       this._description = this.description;
       this._title = this.title;
       this._tags = this.tags;
-      this._sortOrder = this.sortOrder;
       this._dirty = false;
     },
     /**
@@ -309,8 +308,7 @@ Example:
 
       this._dirty = (this.description !== this._description ||
       this.title !== this._title ||
-      JSON.stringify(this.tags) !== JSON.stringify(this._tags) ||
-      this.sortOrder !== this._sortOrder);
+      JSON.stringify(this.tags) !== JSON.stringify(this._tags));
     },
     /**
      * Method that watches for the image src to change, and updates the DOM element.

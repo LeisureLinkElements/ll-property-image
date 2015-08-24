@@ -47,6 +47,14 @@ describe('<ll-property-image> - Optional Inputs', function() {
       element.$.tags.tagChanged();
     });
 
+    it('should reset the dirty status when calling resetDirtyStatus', function() {
+      element.description = 'This is my Kitchen';
+      expect(element.description).to.be.eql('This is my Kitchen');
+      expect(element.isDirty()).to.be.equal(true);
+      element.resetDirtyStatus();
+      expect(element.isDirty()).to.be.equal(false);
+    });
+
   });
 
   describe('getChanges()', function() {
@@ -93,11 +101,11 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.sortOrder).to.be.eql(3);
     });
 
-    it('should update isDirty when the sortOrder has been modified', function() {
+    it('should not trigger isDirty when only the sort order changes', function() {
 
       expect(element.isDirty()).to.be.eql(false);
       element.setSortOrder(4);
-      expect(element.isDirty()).to.be.eql(true);
+      expect(element.isDirty()).to.be.eql(false);
     });
   });
 
