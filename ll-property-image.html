@@ -25,7 +25,7 @@ Example:
         </h1>
 
         <div id="imageContainer">
-          <a id="propertyImage" class="img-link">
+          <a id="propertyImage" class="img-link" draggable="true">
             <ll-cog id="spinner" active></ll-cog>
           </a>
           <div class='menu' id="menu">
@@ -187,7 +187,6 @@ Example:
       this.setImageSrc(this.src);
 
       //The following items are set to enable drag/drop functionality
-      this.setAttribute('draggable', true);
       this.addEventListener('dragstart', this._handleDragStart, false);
       this.addEventListener('dragenter', this._handleDragEnter, false);
       this.addEventListener('dragover', this._handleDragOver, false);
