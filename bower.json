@@ -1,6 +1,6 @@
 {
   "name": "ll-property-image",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "authors": [
     "Anonymous <anonymous@example.com>"
   ],
@@ -20,7 +20,7 @@
     "/demo/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0",
+    "polymer": "Polymer/polymer#^1.1.0",
     "iron-input": "PolymerElements/iron-input#~1.0.4",
     "ll-token-field": "LeisureLinkElements/ll-token-field",
     "ll-throbber": "LeisureLinkElements/ll-throbber",
