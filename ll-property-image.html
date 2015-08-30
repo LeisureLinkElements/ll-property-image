@@ -20,12 +20,12 @@ Example:
     <div id="main" class="baseballcard-container">
 
       <div class="thumbnail baseballcard" on-tap='_closeMenu'>
-        <h1>
-          <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}}>
+        <h1 ondragstart="return false;">
+          <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}} ondragstart="return false;">
         </h1>
 
-        <div id="imageContainer">
-          <a id="propertyImage" class="img-link" draggable="true">
+        <div id="imageContainer" draggable="true">
+          <a id="propertyImage" class="img-link">
             <ll-cog id="spinner" active></ll-cog>
           </a>
           <div class='menu' id="menu">
@@ -363,7 +363,7 @@ Example:
       this.toggleClass('dragging', true, this);
 
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData("text/plain", this.imgId);
+      e.dataTransfer.setData(this._getDataTransferType(), this.imgId);
     },
     /**
      * Drag Over
@@ -412,7 +412,7 @@ Example:
         e.stopPropagation();
       }
 
-      var _draggingImg = e.dataTransfer.getData("text/plain");
+      var _draggingImg = e.dataTransfer.getData(this._getDataTransferType());
       var _droppedOnto = this.imgId;
 
       if (_draggingImg !== _droppedOnto) {
@@ -445,6 +445,23 @@ Example:
     },
     _handleMouseLeave: function() {
       this._closeMenu();
+    },
+    /**
+     * Needed to check for IE, as it needs a different data type than other browsers.
+     * @returns {string}
+     * @private
+     */
+    _getDataTransferType: function() {
+      var userAgent = window.navigator.userAgent;
+      var msie = userAgent.indexOf('MSIE ');       //Detect IE
+      var trident = userAgent.indexOf('Trident/'); //Detect IE 11
+
+      var transferType = 'text/plain';
+
+      if (msie > 0 || trident > 0) {
+        transferType = 'Text';
+      }
+      return transferType;
     }
 
   });

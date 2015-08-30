@@ -19,6 +19,7 @@
 
 ll-cog {
   width: 40px;
+  height: 40px;
   position: absolute;
   left: calc(50% - 20px);
   top: calc(50% - 20px);
@@ -159,9 +160,7 @@ input.inline-edit:focus {
 }
 
 .thumbnail a:hover {
-  cursor:grab;
-  cursor:-moz-grab;
-  cursor:-webkit-grab;
+  cursor:url(grab.cur), move;
 }
 
 ll-token-field {
