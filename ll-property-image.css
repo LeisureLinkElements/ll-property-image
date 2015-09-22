@@ -92,6 +92,15 @@ input.inline-edit:focus {
   user-select: none;
 }
 
+.baseballcard-container {
+  margin: 0;
+  padding: 0;
+}
+
+.baseballcard a.img-link {
+  margin: 0;
+}
+
 .property-image-loading {
   position: absolute;
   left: calc(50% - 20px);
