@@ -63,19 +63,26 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(element.getChanges()).to.be.ok;
     });
 
+
+
     it('should return the title, description, and tags', function() {
-      expect(element.getChanges()).to.have.deep.property('title');
-      expect(element.getChanges()).to.have.deep.property('description');
-      expect(element.getChanges()).to.have.deep.property('tags');
-      expect(element.getChanges()).to.have.deep.property('imgId');
-      expect(element.getChanges()).to.have.deep.property('sortOrder');
-      expect(element.getChanges()).to.be.eql({
+      var changes = element.getChanges();
+      expect(changes).to.have.deep.property('title');
+      expect(changes).to.have.deep.property('description');
+      expect(changes).to.have.deep.property('tags');
+      expect(changes).to.have.deep.property('imgId');
+      expect(changes).to.have.deep.property('sortOrder');
+      expect(changes).to.have.deep.property('fileName');
+      expect(changes).to.have.deep.property('isDefault');
+      expect(changes).to.be.eql({
         dirty: false,
         imgId: '123456',
         title: 'This is a title',
         description: 'This is a description',
         tags: ['Rufus', 'Garfield', 'Beavis'],
-        sortOrder: 2
+        sortOrder: 2,
+        fileName: "dc134145.jpg",
+        isDefault: true
       });
     });
 

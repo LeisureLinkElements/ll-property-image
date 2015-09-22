@@ -217,12 +217,9 @@ Example:
      */
     makeDefaultImage: function() {
       this.isDefault = !this.isDefault;
-      this.fire('ll-property-image-default', {
-        imgId: this.imgId,
-        name: this.name,
-        isDefault: this.isDefault,
-        src: this.src
-      });
+
+      var changes = this.getChanges();
+      this.fire('ll-property-image-default', changes);
     },
     /**
      * Method to change the image src.
@@ -274,7 +271,9 @@ Example:
         title: this.title,
         description: this.description,
         tags: this.tags,
-        sortOrder: this.sortOrder
+        sortOrder: this.sortOrder,
+        fileName: this.name,
+        isDefault: this.isDefault
       };
     },
 
