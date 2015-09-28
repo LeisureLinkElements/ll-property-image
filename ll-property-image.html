@@ -27,6 +27,13 @@ Example:
         padding: 0 5px 15px !important; /*needs important or bootstrap will clobber it*/
       }
 
+      :host {
+        --ll-token-field: {
+          border: 1px solid #d4d4d4;
+          padding: 4px;
+        };
+      }
+
       :host.over .thumbnail {
         border-color: transparent;
         outline: 2px dashed var(--blue-pastel);
