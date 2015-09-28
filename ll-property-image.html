@@ -45,6 +45,14 @@ Example:
         z-index: 10;
       }
 
+      ll-token-field {
+        height: 75px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 100%;
+        padding: 10px 0;
+      }
+
       h1 {
         font-size: 1.0em;
         color: var(--gray-dark);
@@ -55,21 +63,19 @@ Example:
         resize: none;
         display: block;
         width: 100%;
-        height: 50px;
+        height: 75px;
         outline: none;
         font-size: .8em;
         line-height: 1.2em;
         border: 0;
         padding: 3px 7px;
         border-top: 1px solid var(--gray);
-      }
+        border: 1px solid #dcdcdc;
+        border-radius: 4px;
 
-      ul {
-        list-style: none;
-      }
-
-      a:hover {
-        text-decoration: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
       }
 
       input.inline-edit {
@@ -86,8 +92,10 @@ Example:
         line-height: inherit;
         font-size: inherit;
         text-align: inherit;
-        background-color: inherit;
+        background-color: white;
         vertical-align: top;
+        border-radius: 4px;
+        border: 1px solid #d4d4d4;
       }
 
       input.inline-edit:hover,
@@ -111,6 +119,10 @@ Example:
         user-select: none;
       }
 
+      .thumbnail.baseballcard {
+        padding: 10px;
+      }
+
       .baseballcard-container {
         margin: 0;
         padding: 0;
@@ -128,6 +140,10 @@ Example:
         z-index: 10;
       }
 
+      #imageContainer {
+        padding: 10px 0;
+      }
+
       #imageContainer:hover .menu {
         display: block;
       }
@@ -135,50 +151,9 @@ Example:
         display: block;
       }
 
-      .menu {
-        display: none;
-        position: absolute;
-        top: 42px;
-        right: 15px;
-      }
-
-      .menu button {
-        padding: 2px 8px;
-        border-radius: 0;
-        font-size: 1.5rem;
-      }
-
-      .menu ul {
-        display: none;
-        position: absolute;
-        right: 0;
-        background-color: var(--white);
-        padding: 0;
-        margin: 0;
-        color: var(--gray-dark);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-        width: 130px;
-        font-size: 12px;
-      }
-
-      .menu ul li {
-        padding: 5px;
-        cursor: pointer;
-        line-height: 18px;
-      }
-
-      .menu ul li:hover {
-        background-color: var(--gray-light);
-      }
-
-      .menu ul li a {
-        padding: 5px;
-        font-size: 12px;
-        color: var(--gray-dark);
-      }
-
       .thumbnail {
         margin-bottom: 0;
+        background-color: inherit;
       }
 
       .thumbnail a {
@@ -193,23 +168,27 @@ Example:
         cursor:url(grab.cur), move;
       }
 
-      ll-token-field {
-        height: 55px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        width: 100%;
-        padding: 3px 3px;
-      }
-
       #main.tagsOpen ll-token-field {
         display: block;
+      }
+
+      .image-actions input {
+        margin-right: 5px;
+      }
+
+      .image-actions label:hover {
+        cursor: pointer;
+      }
+
+      .image-actions button {
+        padding-top: 7px;
       }
 
     </style>
 
     <div id="main" class="baseballcard-container">
 
-      <div class="thumbnail baseballcard" on-tap='_closeMenu'>
+      <div class="thumbnail baseballcard clearfix">
         <h1 ondragstart="return false;">
           <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}} ondragstart="return false;">
         </h1>
@@ -218,22 +197,15 @@ Example:
           <a id="propertyImage" class="img-link">
             <ll-cog id="spinner" active></ll-cog>
           </a>
-          <div class='menu' id="menu">
-            <button  tabindex="-1" id="pencil" on-tap='_toggleMenu' class="btn btn-default dropdown-toggle"><span class="entypo pencil"></span></button>
-
-            <ul class="no-select">
-              <li on-tap='makeDefaultImage'>
-                <a>Make Default Image</a>
-              </li>
-              <li on-tap='deleteImage'>
-                <a>Delete Image</a>
-              </li>
-            </ul>
-          </div>
         </div>
 
-        <ll-token-field id="tags" tags='{{tags}}' placeholder="Image tags..."></ll-token-field>
         <textarea placeholder='Description...' value={{description::input}}></textarea>
+        <ll-token-field id="tags" tags='{{tags}}' placeholder="Image tags..."></ll-token-field>
+
+        <div class="image-actions no-select">
+          <input type="checkbox" checked="{{isDefault::change}}" on-tap="makeDefaultImage"/><label on-tap="makeDefaultImage">Default Image</label>
+          <button class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
+        </div>
       </div>
 
     </div>
@@ -323,14 +295,6 @@ Example:
         type: Number,
         value: 1,
         observer: '_metaDataChanged'
-      },
-      /**
-       * Used to track if the dropdown menu is visible.
-       */
-      menuOpen: {
-        type: Boolean,
-        value: false,
-        readOnly: true
       },
       /**
        * Used to track if this is the default image in the gallery.
@@ -515,25 +479,6 @@ Example:
       this.toggleClass('hidden', newVal, this.$.spinner);
     },
     /**
-     * Toggles the visibility on the Menu
-     * @private
-     */
-    _toggleMenu: function(e) {
-      this._setMenuOpen(!this.menuOpen);
-      this.toggleClass('menuOpen', this.menuOpen, this.$.imageContainer);
-      e.preventDefault();
-      e.stopPropagation();
-
-    },
-    /**
-     * Sets the visibility on the Menu to hidden
-     * @private
-     */
-    _closeMenu: function() {
-      this._setMenuOpen(false);
-      this.toggleClass('menuOpen', false, this.$.imageContainer);
-    },
-    /**
      * This is called when the ll-token-modified event is received.
      * @private
      */
@@ -548,7 +493,6 @@ Example:
      * @param e
      */
     _handleDragStart: function(e) {
-      this._closeMenu();
       this.toggleClass('dragging', true, this);
 
       e.dataTransfer.effectAllowed = 'move';
@@ -633,7 +577,6 @@ Example:
       this.toggleClass('over', false, this);
     },
     _handleMouseLeave: function() {
-      this._closeMenu();
     },
     /**
      * Needed to check for IE, as it needs a different data type than other browsers.

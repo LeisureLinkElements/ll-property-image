@@ -27,7 +27,17 @@
   </div>
 </div>
 
+<script>
 
+  document.addEventListener('ll-property-image-default', function(e) {
+    console.log('Default changed: ', e.detail);
+  });
+
+  document.addEventListener('ll-property-image-delete', function(e) {
+    console.log('Image Delete: ', e.detail);
+  });
+
+</script>
 
   </body>
 </html>
