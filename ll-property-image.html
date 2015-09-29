@@ -16,7 +16,7 @@ Example:
 
   <template>
 
-    <style>
+    <style is="custom-style">
 
       :host {
         display: inline-block;
@@ -31,6 +31,12 @@ Example:
         --ll-token-field: {
           border: 1px solid #d4d4d4;
           padding: 4px;
+          background-color: white;
+          overflow: auto;
+        };
+        --ll-token-field-readOnly: {
+          border: 1px solid #f0f0f0;
+          background-color: inherit;
         };
       }
 
@@ -53,12 +59,13 @@ Example:
       }
 
       ll-token-field {
-        height: 75px;
+        height: 82px;
         overflow-x: hidden;
         overflow-y: auto;
         width: 100%;
         padding: 10px 0;
       }
+
 
       h1 {
         font-size: 1.0em;
@@ -70,19 +77,23 @@ Example:
         resize: none;
         display: block;
         width: 100%;
-        height: 75px;
+        height: 60px;
         outline: none;
         font-size: .8em;
         line-height: 1.2em;
         border: 0;
         padding: 3px 7px;
-        border-top: 1px solid var(--gray);
         border: 1px solid #dcdcdc;
         border-radius: 4px;
 
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+      }
+
+      :host.readOnly textarea, :host.readOnly input.inline-edit, :host.readOnly .baseballcard-container input.inline-edit:hover, :host.readOnly .baseballcard-container input.inline-edit:focus {
+        background-color: inherit;
+        border: 1px solid #f0f0f0;
       }
 
       input.inline-edit {
@@ -175,6 +186,10 @@ Example:
         cursor:url(grab.cur), move;
       }
 
+      :host.readOnly .thumbnail a:hover {
+        cursor:default;
+      }
+
       #main.tagsOpen ll-token-field {
         display: block;
       }
@@ -187,8 +202,8 @@ Example:
         cursor: pointer;
       }
 
-      .image-actions button {
-        padding-top: 7px;
+      :host.readOnly .image-actions button {
+        display: none;
       }
 
     </style>
@@ -200,18 +215,18 @@ Example:
           <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}} ondragstart="return false;">
         </h1>
 
-        <div id="imageContainer" draggable="true">
+        <div id="imageContainer">
           <a id="propertyImage" class="img-link">
             <ll-cog id="spinner" active></ll-cog>
           </a>
         </div>
 
-        <textarea placeholder='Description...' value={{description::input}}></textarea>
+        <textarea id="description" placeholder='Description...' value={{description::input}}></textarea>
         <ll-token-field id="tags" tags='{{tags}}' placeholder="Image tags..."></ll-token-field>
 
         <div class="image-actions no-select">
           <input type="checkbox" checked="{{isDefault::change}}" on-tap="makeDefaultImage"/><label on-tap="makeDefaultImage">Default Image</label>
-          <button class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
+          <button id="delete-image" class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
         </div>
       </div>
 
@@ -332,6 +347,11 @@ Example:
       isLoading: {
         type: Boolean,
         value: false
+      },
+      readOnly: {
+        type: Boolean,
+        value: false,
+        observer: '_handleReadOnlyChange'
       }
     },
 
@@ -601,6 +621,29 @@ Example:
         transferType = 'Text';
       }
       return transferType;
+    },
+    /**
+     * Triggered when the readOnly property is changed.
+     * This will update the ll-token-field attribute so it can have the same attribute
+     * Updates inputs to have the default html read-only attribute
+     * Updates the draggable attribute
+     * @private
+     */
+    _handleReadOnlyChange: function() {
+      var rdOnly = this.readOnly;
+
+      this.toggleClass('readOnly', rdOnly, this);
+
+      if(rdOnly) {
+        this.$.tags.setAttribute('read-only', rdOnly.toString());
+      } else {
+        this.$.tags.removeAttribute('read-only');
+      }
+
+      this.$['image-title'].setAttribute('readonly', rdOnly.toString());
+      this.$.description.setAttribute('readonly', rdOnly.toString());
+      this.$.imageContainer.setAttribute('draggable', (!rdOnly).toString());
+
     }
 
   });

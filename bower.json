@@ -22,7 +22,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
     "iron-input": "PolymerElements/iron-input#~1.0.4",
-    "ll-token-field": "LeisureLinkElements/ll-token-field",
+    "ll-token-field": "LeisureLinkElements/ll-token-field#read-only-mode",
     "ll-throbber": "LeisureLinkElements/ll-throbber",
     "ll-theme": "LeisureLinkElements/ll-theme"
   },
