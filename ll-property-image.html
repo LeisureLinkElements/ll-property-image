@@ -194,8 +194,19 @@ Example:
         display: block;
       }
 
+      .image-actions {
+        height: 25px;
+      }
+
       .image-actions input {
         margin-right: 5px;
+      }
+
+      :host.readOnly .image-actions input, :host.readOnly .image-actions input + label {
+        display: none;
+      }
+      :host.readOnly .image-actions input:checked, :host.readOnly .image-actions input:checked + label {
+        display: inline-block;
       }
 
       .image-actions label:hover {
@@ -205,6 +216,7 @@ Example:
       :host.readOnly .image-actions button {
         display: none;
       }
+
 
     </style>
 
@@ -225,7 +237,7 @@ Example:
         <ll-token-field id="tags" tags='{{tags}}' placeholder="Image tags..."></ll-token-field>
 
         <div class="image-actions no-select">
-          <input type="checkbox" checked="{{isDefault::change}}" on-tap="makeDefaultImage"/><label on-tap="makeDefaultImage">Default Image</label>
+          <input id="default-image" type="checkbox" checked="{{isDefault::change}}" on-tap="makeDefaultImage"/><label on-tap="makeDefaultImage">Default Image</label>
           <button id="delete-image" class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
         </div>
       </div>
@@ -295,7 +307,8 @@ Example:
        */
       title: {
         type: String,
-        observer: '_metaDataChanged'
+        observer: '_metaDataChanged',
+        value: ''
       },
       /**
        * Tags/tokens for the image
@@ -356,7 +369,7 @@ Example:
     },
 
     ready: function() {
-      this.title = this.title || this.name;
+//      this.title = this.title || this.name;
 
 
       this.resetDirtyStatus();
@@ -397,6 +410,9 @@ Example:
      * Toggles the Default Image value, and raises an event.
      */
     makeDefaultImage: function() {
+      if(this.readOnly) {
+        return;
+      }
       this.isDefault = !this.isDefault;
 
       var changes = this.getChanges();
@@ -473,6 +489,12 @@ Example:
       this._description = this.description;
       this._title = this.title;
       this._tags = this.tags;
+      this._dirty = false;
+    },
+    resetFields: function() {
+      this.description = this._description;
+      this.title = this._title;
+      this.tags = this._tags;
       this._dirty = false;
     },
     /**
@@ -636,14 +658,17 @@ Example:
 
       if(rdOnly) {
         this.$.tags.setAttribute('read-only', rdOnly.toString());
+        this.$['default-image'].setAttribute('disabled', rdOnly.toString());
+        this.$['image-title'].setAttribute('readonly', rdOnly.toString());
+        this.$.description.setAttribute('readonly', rdOnly.toString());
       } else {
         this.$.tags.removeAttribute('read-only');
+        this.$['default-image'].removeAttribute('disabled');
+        this.$['image-title'].removeAttribute('readonly');
+        this.$.description.removeAttribute('readonly');
       }
 
-      this.$['image-title'].setAttribute('readonly', rdOnly.toString());
-      this.$.description.setAttribute('readonly', rdOnly.toString());
       this.$.imageContainer.setAttribute('draggable', (!rdOnly).toString());
-
     }
 
   });

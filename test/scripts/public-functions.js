@@ -116,4 +116,36 @@ describe('<ll-property-image> - Optional Inputs', function() {
     });
   });
 
+  describe('resetFields()', function() {
+
+    it('should reset the title, description, and tags back to their original values', function() {
+      element.description = "foo";
+      element.title = "moo";
+      element.tags = ['boo'];
+      expect(element.description).to.be.eql("foo");
+      expect(element.title).to.be.eql("moo");
+      expect(element.tags).to.be.eql(["boo"]);
+
+      element.resetFields();
+
+      expect(element.description).to.be.eql("This is a description");
+      expect(element.title).to.be.eql("This is a title");
+      expect(element.tags).to.be.eql(["Rufus", "Garfield", "Beavis"]);
+    });
+
+    it('should reset isDirty after the fields are reset', function() {
+      element.description = "moose";
+      element.title = "goose";
+      element.tags = ['loose'];
+      expect(element.description).to.be.eql("moose");
+      expect(element.title).to.be.eql("goose");
+      expect(element.tags).to.be.eql(['loose']);
+
+      element.resetFields();
+
+      expect(element.isDirty()).to.be.false;
+    });
+
+  });
+
 });
