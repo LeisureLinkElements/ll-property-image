@@ -5,11 +5,13 @@ describe('Drag and Drop', function() {
   var element;
   var myEl1;
   var myEl2;
+  var transferType;
 
   beforeEach(function() {
     element = fixture('fixture');
     myEl1 = element[0];
     myEl2 = element[1];
+    transferType = myEl1._getDataTransferType();
   });
 
   it('should fire _handleDragStart when you start to drag an element', function() {
@@ -17,8 +19,8 @@ describe('Drag and Drop', function() {
 
     dragMock.dragStart(myEl1, function(e) {
       expect(e.dataTransfer.effectAllowed).to.be.eql('move');
-      expect(e.dataTransfer.types[0]).to.be.eql('text/plain');
-      expect(e.dataTransfer.getData("text/plain")).to.be.eql("1");
+      expect(e.dataTransfer.types[0]).to.be.eql(transferType);
+      expect(e.dataTransfer.getData(transferType)).to.be.eql("1");
 
       //class list returns a DOMTokenList
       expect(myEl1.classList.contains('dragging')).to.be.eql(true);
@@ -49,7 +51,7 @@ describe('Drag and Drop', function() {
       .dragOver(myEl2)
       .drop(myEl2, function(e) {
         expect(e.dataTransfer.effectAllowed).to.be.eql('move');
-        expect(e.dataTransfer.types[0]).to.be.eql('text/plain');
+        expect(e.dataTransfer.types[0]).to.be.eql(transferType);
       });
   });
 
