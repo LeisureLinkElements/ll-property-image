@@ -35,8 +35,8 @@ Example:
           overflow: auto;
         };
         --ll-token-field-readOnly: {
-          border: 1px solid #f0f0f0;
-          background-color: #f0f0f0;
+          border: 1px solid #F3F3F4;
+          background-color: #F3F3F4;
           overflow: hidden;
         };
       }
@@ -93,8 +93,8 @@ Example:
       }
 
       :host.readOnly textarea, :host.readOnly input.inline-edit, :host.readOnly .baseballcard-container input.inline-edit:hover, :host.readOnly .baseballcard-container input.inline-edit:focus {
-        background-color: #f0f0f0;
-        border: 1px solid #f0f0f0;
+        background-color: #F3F3F4;
+        border: 1px solid #F3F3F4;
         overflow: hidden;
       }
 
@@ -146,11 +146,12 @@ Example:
       .baseballcard-container {
         margin: 0;
         padding: 0;
-        background-color: #f0f0f0;
+        background-color: #F3F3F4;
       }
 
       .baseballcard a.img-link {
         margin: 0;
+        color: #222222;
       }
 
       .property-image-loading {
@@ -181,7 +182,7 @@ Example:
         max-height: 250px;
         min-height: 150px;
         position: relative;
-        background-color: #f0f0f0;
+        background-color: #F3F3F4;
       }
 
       .thumbnail a:hover {
@@ -215,8 +216,25 @@ Example:
         cursor: pointer;
       }
 
+      #description {
+        margin-top: 9px;
+        text-align: justify;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        hyphenate-limit-chars: 6 3 2;
+        hyphenate-limit-lines: 2;
+      }
+
       :host.readOnly .image-actions button {
         display: none;
+      }
+
+      #default-image-label {
+        font-size: 1.3rem;
+        text-transform: capitalize;
+        text-overflow: ellipsis;
       }
 
 
@@ -225,23 +243,25 @@ Example:
     <div id="main" class="baseballcard-container">
 
       <div class="thumbnail baseballcard clearfix">
-        <h1 ondragstart="return false;">
-          <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}} ondragstart="return false;">
-        </h1>
-
         <div id="imageContainer">
           <a id="propertyImage" class="img-link">
             <ll-cog id="spinner" active></ll-cog>
           </a>
         </div>
 
-        <textarea id="description" placeholder='Description...' value={{description::input}}></textarea>
-        <ll-token-field id="tags" tags='{{tags}}' placeholder="Image tags..."></ll-token-field>
+        <h1 ondragstart="return false;">
+          <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}} ondragstart="return false;">
+        </h1>
+
+        <textarea maxlength="75" id="description" placeholder='Description...' value={{description::input}}></textarea>
+        <ll-token-field id="tags" tags='{{tags}}' placeholder="Click 'tab' to enter a tag..."></ll-token-field>
 
         <div class="image-actions no-select">
-          <input id="default-image" type="checkbox" checked="{{isDefault::change}}" on-tap="makeDefaultImage"/><label on-tap="makeDefaultImage">Default Image</label>
+          <button hidden$="{{isDefault}}" id="default-image" class="btn btn-link pull-left" on-tap="makeDefaultImage">SET AS DEFAULT</button>
+          <div hidden$="{{!isDefault}}" id="default-image-label" class="pull-left">DEFAULT IMAGE</div>
           <button id="delete-image" class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
         </div>
+
       </div>
 
     </div>
@@ -371,8 +391,6 @@ Example:
     },
 
     ready: function() {
-//      this.title = this.title || this.name;
-
 
       this.resetDirtyStatus();
 
@@ -382,8 +400,8 @@ Example:
 
       this.setImageSrc(this.src);
 
-      //The following items are set to enable drag/drop functionality
       this.addEventListener('dragstart', this._handleDragStart, false);
+      //The following items are set to enable drag/drop functionality
       this.addEventListener('dragenter', this._handleDragEnter, false);
       this.addEventListener('dragover', this._handleDragOver, false);
       this.addEventListener('dragleave', this._handleDragLeave, false);
@@ -415,10 +433,18 @@ Example:
       if(this.readOnly) {
         return;
       }
-      this.isDefault = !this.isDefault;
 
-      var changes = this.getChanges();
-      this.fire('ll-property-image-default', changes);
+      var image = {
+        imgId: this.imgId,
+        name: this.name,
+        isDefault: true,
+        title: this.title,
+        description: this.description,
+        sortOrder: this.sortOrder,
+        tags: this.tags
+      };
+      console.log('image, ll-prop-image', image);
+      this.fire('ll-property-image-default', image);
     },
     /**
      * Method to change the image src.
@@ -490,13 +516,59 @@ Example:
       //storing off copies of these values so we can use them to check for isDirty
       this._description = this.description;
       this._title = this.title;
-      this._tags = this.tags;
+      this._tags = JSON.parse(JSON.stringify(this.tags));
       this._dirty = false;
     },
     resetFields: function() {
       this.description = this._description;
       this.title = this._title;
       this.tags = this._tags;
+      this._dirty = false;
+    },
+    /**
+     * Method that watches for changes to the Title or Description. Will eval the changes and set the _dirty flag that is returned from the isDirty() method.
+     * @private
+     */
+    _metaDataChanged: function() {
+
+      //make sure these values are set first
+      if (!this._title) {
+        return;
+      }
+
+      this._dirty = (this.description !== this._description ||
+      this.title !== this._title ||
+      JSON.stringify(this.tags) !== JSON.stringify(this._tags));
+    },
+    /**
+     * Method that watches for the image src to change, and updates the DOM element.
+     * @param newVal
+     * @private
+     */
+    _imageSrcChanged: function(newVal) {
+      this.$.propertyImage.style.backgroundImage =  'url(' + newVal +')';
+    },
+    /**
+     * Method that is triggered when the image has loaded. This sets the visibility of the spinner
+     * @private
+     */
+    _handleLoaded: function(newVal) {
+      this.toggleClass('hidden', newVal, this.$.spinner);
+    },
+    /**
+     * This is called when the ll-token-modified event is received.
+     * @private
+     */
+    _tagsChanged: function() {
+      this.tags = this.tags.splice(0);
+      this._metaDataChanged();
+    },
+    /**
+     * Drag start
+     * Sets up the dataTransfer object and set the opacity to indicate a visual clue that you are dragging the element.
+     * @private
+     * @param e
+     *
       this._dirty = false;
     },
     /**
@@ -660,12 +732,10 @@ Example:
 
       if(rdOnly) {
         this.$.tags.setAttribute('read-only', rdOnly.toString());
-        this.$['default-image'].setAttribute('disabled', rdOnly.toString());
         this.$['image-title'].setAttribute('readonly', rdOnly.toString());
         this.$.description.setAttribute('readonly', rdOnly.toString());
       } else {
         this.$.tags.removeAttribute('read-only');
-        this.$['default-image'].removeAttribute('disabled');
         this.$['image-title'].removeAttribute('readonly');
         this.$.description.removeAttribute('readonly');
       }
