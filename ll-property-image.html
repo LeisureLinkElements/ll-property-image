@@ -35,8 +35,8 @@ Example:
           overflow: auto;
         };
         --ll-token-field-readOnly: {
-          border: 1px solid #F3F3F4;
-          background-color: #F3F3F4;
+          border: 1px solid var(--gray-light);
+          background-color: var(--gray-light);
           overflow: hidden;
         };
       }
@@ -93,8 +93,8 @@ Example:
       }
 
       :host.readOnly textarea, :host.readOnly input.inline-edit, :host.readOnly .baseballcard-container input.inline-edit:hover, :host.readOnly .baseballcard-container input.inline-edit:focus {
-        background-color: #F3F3F4;
-        border: 1px solid #F3F3F4;
+        background-color: var(--gray-light);
+        border: 1px solid var(--gray-light);
         overflow: hidden;
       }
 
@@ -146,7 +146,7 @@ Example:
       .baseballcard-container {
         margin: 0;
         padding: 0;
-        background-color: #F3F3F4;
+        background-color: var(--gray-light);
       }
 
       .baseballcard a.img-link {
@@ -182,7 +182,7 @@ Example:
         max-height: 250px;
         min-height: 150px;
         position: relative;
-        background-color: #F3F3F4;
+        background-color: var(--gray-light);
       }
 
       .thumbnail a:hover {
@@ -443,7 +443,6 @@ Example:
         sortOrder: this.sortOrder,
         tags: this.tags
       };
-      console.log('image, ll-prop-image', image);
       this.fire('ll-property-image-default', image);
     },
     /**
