@@ -19,11 +19,6 @@ describe('<ll-property-image> - Required Inputs', function() {
     expect(element.sizing).to.be.eql('cover');
   });
 
-  it('should default the title to the imgName, if Title is not provided', function() {
-    expect(element.title).to.be.eql('dc134145.jpg');
-    expect(element.title).to.be.eql(element.name);
-  });
-
   it('should default the isDefault property to false if it is not provided', function() {
     expect(element.isDefault).to.be.eql(false);
   });

@@ -14,36 +14,254 @@ Example:
 -->
 <dom-module id='ll-property-image'>
 
-  <link rel="import" type="css" href="ll-property-image.css">
-
   <template>
+
+    <style is="custom-style">
+
+      :host {
+        display: inline-block;
+        box-sizing: border-box;
+        position: relative;
+        font-size: 1em;
+        line-height: 1.2em;
+        padding: 0 5px 15px !important; /*needs important or bootstrap will clobber it*/
+      }
+
+      :host {
+        --ll-token-field: {
+          border: 1px solid #d4d4d4;
+          padding: 4px;
+          background-color: white;
+          overflow: auto;
+        };
+        --ll-token-field-readOnly: {
+          border: 1px solid var(--gray-light);
+          background-color: var(--gray-light);
+          overflow: hidden;
+        };
+      }
+
+      :host.over .thumbnail {
+        border-color: transparent;
+        outline: 2px dashed var(--blue-pastel);
+      }
+
+      :host.dragging {
+        opacity: 0.4;
+      }
+
+      ll-cog {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        left: calc(50% - 20px);
+        top: calc(50% - 20px);
+        z-index: 10;
+      }
+
+      ll-token-field {
+        height: 82px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 100%;
+        padding: 10px 0;
+      }
+
+
+      h1 {
+        font-size: 1.0em;
+        color: var(--gray-dark);
+        margin: 0;
+      }
+
+      textarea {
+        resize: none;
+        display: block;
+        width: 100%;
+        height: 60px;
+        outline: none;
+        font-size: .8em;
+        line-height: 1.2em;
+        border: 0;
+        padding: 3px 7px;
+        border: 1px solid #dcdcdc;
+        border-radius: 4px;
+
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      :host.readOnly textarea, :host.readOnly input.inline-edit, :host.readOnly .baseballcard-container input.inline-edit:hover, :host.readOnly .baseballcard-container input.inline-edit:focus {
+        background-color: var(--gray-light);
+        border: 1px solid var(--gray-light);
+        overflow: hidden;
+      }
+
+      input.inline-edit {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: none;
+        padding: 5px 5px;
+        margin: 0;
+        outline: none;
+        font: inherit;
+        color: inherit;
+        line-height: inherit;
+        font-size: inherit;
+        text-align: inherit;
+        background-color: white;
+        vertical-align: top;
+        border-radius: 4px;
+        border: 1px solid #d4d4d4;
+      }
+
+      input.inline-edit:hover,
+      input.inline-edit:focus {
+        /* Change the background to a light yellow */
+        background-color: var(--highlight);
+
+        /* A subtle transition never hurts */
+        -webkit-transition: background-color 0.5s;
+        -moz-transition: background-color 0.5s;
+        -ie-transition: background-color 0.5s;
+        transition: background-color 0.5s;
+      }
+
+      .no-select {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .thumbnail.baseballcard {
+        padding: 10px;
+      }
+
+      .baseballcard-container {
+        margin: 0;
+        padding: 0;
+        background-color: var(--gray-light);
+      }
+
+      .baseballcard a.img-link {
+        margin: 0;
+        color: #222222;
+      }
+
+      .property-image-loading {
+        position: absolute;
+        left: calc(50% - 20px);
+        top: calc(50% - 20px);
+        z-index: 10;
+      }
+
+      #imageContainer {
+        padding: 10px 0;
+      }
+
+      #imageContainer:hover .menu {
+        display: block;
+      }
+      .menuOpen .menu ul {
+        display: block;
+      }
+
+      .thumbnail {
+        margin-bottom: 0;
+        background-color: inherit;
+      }
+
+      .thumbnail a {
+        height: 25vw;
+        max-height: 250px;
+        min-height: 150px;
+        position: relative;
+        background-color: var(--gray-light);
+      }
+
+      .thumbnail a:hover {
+        cursor:url(grab.cur), move;
+      }
+
+      :host.readOnly .thumbnail a:hover {
+        cursor:default;
+      }
+
+      #main.tagsOpen ll-token-field {
+        display: block;
+      }
+
+      .image-actions {
+        height: 25px;
+      }
+
+      .image-actions input {
+        margin-right: 5px;
+      }
+
+      :host.readOnly .image-actions input, :host.readOnly .image-actions input + label {
+        display: none;
+      }
+      :host.readOnly .image-actions input:checked, :host.readOnly .image-actions input:checked + label {
+        display: inline-block;
+      }
+
+      .image-actions label:hover {
+        cursor: pointer;
+      }
+
+      #description {
+        margin-top: 9px;
+        text-align: justify;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        hyphenate-limit-chars: 6 3 2;
+        hyphenate-limit-lines: 2;
+      }
+
+      :host.readOnly .image-actions button {
+        display: none;
+      }
+
+      #default-image-label {
+        font-size: 1.3rem;
+        text-transform: capitalize;
+        text-overflow: ellipsis;
+      }
+
+
+    </style>
+
     <div id="main" class="baseballcard-container">
 
-      <div class="thumbnail baseballcard" on-tap='_closeMenu'>
+      <div class="thumbnail baseballcard clearfix">
+        <div id="imageContainer">
+          <a id="propertyImage" class="img-link">
+            <ll-cog id="spinner" active></ll-cog>
+          </a>
+        </div>
+
         <h1 ondragstart="return false;">
           <input placeholder='Enter a title...' is='iron-input' id='image-title' class='inline-edit' value={{title::input}} ondragstart="return false;">
         </h1>
 
-        <div id="imageContainer" draggable="true">
-          <a id="propertyImage" class="img-link">
-            <ll-cog id="spinner" active></ll-cog>
-          </a>
-          <div class='menu' id="menu">
-            <button  tabindex="-1" id="pencil" on-tap='_toggleMenu' class="btn btn-default dropdown-toggle"><span class="entypo pencil"></span></button>
+        <textarea maxlength="75" id="description" placeholder='Description...' value={{description::input}}></textarea>
+        <ll-token-field id="tags" tags='{{tags}}' placeholder="Click 'tab' to enter a tag..."></ll-token-field>
 
-            <ul class="no-select">
-              <li on-tap='makeDefaultImage'>
-                <a>Make Default Image</a>
-              </li>
-              <li on-tap='deleteImage'>
-                <a>Delete Image</a>
-              </li>
-            </ul>
-          </div>
+        <div class="image-actions no-select">
+          <button hidden$="{{isDefault}}" id="default-image" class="btn btn-link pull-left" on-tap="makeDefaultImage">SET AS DEFAULT</button>
+          <div hidden$="{{!isDefault}}" id="default-image-label" class="pull-left">DEFAULT IMAGE</div>
+          <button id="delete-image" class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
         </div>
 
-        <ll-token-field id="tags" tags='{{tags}}' placeholder="Image tags..."></ll-token-field>
-        <textarea placeholder='Description...' value={{description::input}}></textarea>
       </div>
 
     </div>
@@ -111,7 +329,8 @@ Example:
        */
       title: {
         type: String,
-        observer: '_metaDataChanged'
+        observer: '_metaDataChanged',
+        value: ''
       },
       /**
        * Tags/tokens for the image
@@ -133,14 +352,6 @@ Example:
         type: Number,
         value: 1,
         observer: '_metaDataChanged'
-      },
-      /**
-       * Used to track if the dropdown menu is visible.
-       */
-      menuOpen: {
-        type: Boolean,
-        value: false,
-        readOnly: true
       },
       /**
        * Used to track if this is the default image in the gallery.
@@ -171,12 +382,15 @@ Example:
       isLoading: {
         type: Boolean,
         value: false
+      },
+      readOnly: {
+        type: Boolean,
+        value: false,
+        observer: '_handleReadOnlyChange'
       }
     },
 
     ready: function() {
-      this.title = this.title || this.name;
-
 
       this.resetDirtyStatus();
 
@@ -186,8 +400,8 @@ Example:
 
       this.setImageSrc(this.src);
 
-      //The following items are set to enable drag/drop functionality
       this.addEventListener('dragstart', this._handleDragStart, false);
+      //The following items are set to enable drag/drop functionality
       this.addEventListener('dragenter', this._handleDragEnter, false);
       this.addEventListener('dragover', this._handleDragOver, false);
       this.addEventListener('dragleave', this._handleDragLeave, false);
@@ -216,10 +430,20 @@ Example:
      * Toggles the Default Image value, and raises an event.
      */
     makeDefaultImage: function() {
-      this.isDefault = !this.isDefault;
+      if(this.readOnly) {
+        return;
+      }
 
-      var changes = this.getChanges();
-      this.fire('ll-property-image-default', changes);
+      var image = {
+        imgId: this.imgId,
+        name: this.name,
+        isDefault: true,
+        title: this.title,
+        description: this.description,
+        sortOrder: this.sortOrder,
+        tags: this.tags
+      };
+      this.fire('ll-property-image-default', image);
     },
     /**
      * Method to change the image src.
@@ -291,7 +515,13 @@ Example:
       //storing off copies of these values so we can use them to check for isDirty
       this._description = this.description;
       this._title = this.title;
-      this._tags = this.tags;
+      this._tags = JSON.parse(JSON.stringify(this.tags));
+      this._dirty = false;
+    },
+    resetFields: function() {
+      this.description = this._description;
+      this.title = this._title;
+      this.tags = this._tags;
       this._dirty = false;
     },
     /**
@@ -325,23 +555,50 @@ Example:
       this.toggleClass('hidden', newVal, this.$.spinner);
     },
     /**
-     * Toggles the visibility on the Menu
+     * This is called when the ll-token-modified event is received.
      * @private
      */
-    _toggleMenu: function(e) {
-      this._setMenuOpen(!this.menuOpen);
-      this.toggleClass('menuOpen', this.menuOpen, this.$.imageContainer);
-      e.preventDefault();
-      e.stopPropagation();
-
+    _tagsChanged: function() {
+      this.tags = this.tags.splice(0);
+      this._metaDataChanged();
     },
     /**
-     * Sets the visibility on the Menu to hidden
+     * Drag start
+     * Sets up the dataTransfer object and set the opacity to indicate a visual clue that you are dragging the element.
+     * @private
+     * @param e
+     *
+      this._dirty = false;
+    },
+    /**
+     * Method that watches for changes to the Title or Description. Will eval the changes and set the _dirty flag that is returned from the isDirty() method.
      * @private
      */
-    _closeMenu: function() {
-      this._setMenuOpen(false);
-      this.toggleClass('menuOpen', false, this.$.imageContainer);
+    _metaDataChanged: function() {
+
+      //make sure these values are set first
+      if (!this._title) {
+        return;
+      }
+
+      this._dirty = (this.description !== this._description ||
+      this.title !== this._title ||
+      JSON.stringify(this.tags) !== JSON.stringify(this._tags));
+    },
+    /**
+     * Method that watches for the image src to change, and updates the DOM element.
+     * @param newVal
+     * @private
+     */
+    _imageSrcChanged: function(newVal) {
+      this.$.propertyImage.style.backgroundImage =  'url(' + newVal +')';
+    },
+    /**
+     * Method that is triggered when the image has loaded. This sets the visibility of the spinner
+     * @private
+     */
+    _handleLoaded: function(newVal) {
+      this.toggleClass('hidden', newVal, this.$.spinner);
     },
     /**
      * This is called when the ll-token-modified event is received.
@@ -358,7 +615,6 @@ Example:
      * @param e
      */
     _handleDragStart: function(e) {
-      this._closeMenu();
       this.toggleClass('dragging', true, this);
 
       e.dataTransfer.effectAllowed = 'move';
@@ -443,7 +699,6 @@ Example:
       this.toggleClass('over', false, this);
     },
     _handleMouseLeave: function() {
-      this._closeMenu();
     },
     /**
      * Needed to check for IE, as it needs a different data type than other browsers.
@@ -461,6 +716,30 @@ Example:
         transferType = 'Text';
       }
       return transferType;
+    },
+    /**
+     * Triggered when the readOnly property is changed.
+     * This will update the ll-token-field attribute so it can have the same attribute
+     * Updates inputs to have the default html read-only attribute
+     * Updates the draggable attribute
+     * @private
+     */
+    _handleReadOnlyChange: function() {
+      var rdOnly = this.readOnly;
+
+      this.toggleClass('readOnly', rdOnly, this);
+
+      if(rdOnly) {
+        this.$.tags.setAttribute('read-only', rdOnly.toString());
+        this.$['image-title'].setAttribute('readonly', rdOnly.toString());
+        this.$.description.setAttribute('readonly', rdOnly.toString());
+      } else {
+        this.$.tags.removeAttribute('read-only');
+        this.$['image-title'].removeAttribute('readonly');
+        this.$.description.removeAttribute('readonly');
+      }
+
+      this.$.imageContainer.setAttribute('draggable', (!rdOnly).toString());
     }
 
   });
