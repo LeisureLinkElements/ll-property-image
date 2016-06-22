@@ -17,8 +17,8 @@ describe('<ll-property-image> - Optional Inputs', function() {
       element.deleteImage();
     });
 
-    it('should raise an event for Make Default Image', function() {
-      element.addEventListener('ll-property-image-default', function(event) {
+    it('should raise an event for Make Primary Image', function() {
+      element.addEventListener('ll-property-image-primary', function(event) {
         expect(event.detail).to.be.eql({
           dirty: false,
           imgId: "1234567",
@@ -27,11 +27,11 @@ describe('<ll-property-image> - Optional Inputs', function() {
           tags: [],
           sortOrder: 1,
           fileName: "dc134145.jpg",
-          isDefault: false
+          isPrimary: false
         });
       });
 
-      element.makeDefaultImage();
+      element.makePrimaryImage();
     });
 
     it('should raise an event for cleaning up styles after a drag drop', function() {

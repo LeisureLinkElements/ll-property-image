@@ -8,7 +8,7 @@
 <!--
 Example:
 
-    <ll-property-image id="1234" img-name="dc13416.jpg" img-title="My Kitchen" src="http://lorempixel.com/600/400" img-sizing="cover" tags="['1','2']" is-default></ll-property-image>
+    <ll-property-image id="1234" img-name="dc13416.jpg" img-title="My Kitchen" src="http://lorempixel.com/600/400" img-sizing="cover" tags="['1','2']" is-primary></ll-property-image>
 
 @demo
 -->
@@ -257,8 +257,8 @@ Example:
         <ll-token-field id="tags" tags='{{tags}}' placeholder="Click 'tab' to enter a tag..."></ll-token-field>
 
         <div class="image-actions no-select">
-          <button hidden$="{{isDefault}}" id="default-image" class="btn btn-link pull-left" on-tap="makeDefaultImage">SET AS DEFAULT</button>
-          <div hidden$="{{!isDefault}}" id="default-image-label" class="pull-left">DEFAULT IMAGE</div>
+          <button hidden$="{{isPrimary}}" id="primary-image" class="btn btn-link pull-left" on-tap="makePrimaryImage">SET AS PRIMARY</button>
+          <div hidden$="{{!isPrimary}}" id="default-image-label" class="pull-left">PRIMARY IMAGE</div>
           <button id="delete-image" class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
         </div>
 
@@ -354,9 +354,9 @@ Example:
         observer: '_metaDataChanged'
       },
       /**
-       * Used to track if this is the default image in the gallery.
+       * Used to track if this is the primary image in the gallery.
        */
-      isDefault: {
+      isPrimary: {
         type: Boolean,
         value: false
       },
@@ -427,9 +427,9 @@ Example:
       });
     },
     /**
-     * Toggles the Default Image value, and raises an event.
+     * Toggles the Primary Image value, and raises an event.
      */
-    makeDefaultImage: function() {
+    makePrimaryImage: function() {
       if(this.readOnly) {
         return;
       }
@@ -437,13 +437,13 @@ Example:
       var image = {
         imgId: this.imgId,
         name: this.name,
-        isDefault: true,
+        isPrimary: true,
         title: this.title,
         description: this.description,
         sortOrder: this.sortOrder,
         tags: this.tags
       };
-      this.fire('ll-property-image-default', image);
+      this.fire('ll-property-image-primary', image);
     },
     /**
      * Method to change the image src.
@@ -486,7 +486,7 @@ Example:
     },
     /**
      * Method to grab the Metadata that would be needed to save the changes.
-     * @returns {{title: (properties.title|{type, observer}|*|properties.name|{type}|string), description: (properties.description|{type, value, notify, observer}|*|string|string), isDefault: *}}
+     * @returns {{title: (properties.title|{type, observer}|*|properties.name|{type}|string), description: (properties.description|{type, value, notify, observer}|*|string|string), isPrimary: *}}
      */
     getChanges: function() {
       return {
@@ -497,7 +497,7 @@ Example:
         tags: this.tags,
         sortOrder: this.sortOrder,
         fileName: this.name,
-        isDefault: this.isDefault
+        isPrimary: this.isPrimary
       };
     },
 
