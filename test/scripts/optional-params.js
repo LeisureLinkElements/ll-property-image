@@ -19,8 +19,8 @@ describe('<ll-property-image> - Optional Inputs', function() {
     expect(element.title).to.be.eql('This is a title');
   });
 
-  it('should optionally take a isDefault property', function() {
-    expect(element.isDefault).to.be.eql(true);
+  it('should optionally take a isPrimary property', function() {
+    expect(element.isPrimary).to.be.eql(true);
   });
 
   it('should optionally take a sortOrder property', function() {
