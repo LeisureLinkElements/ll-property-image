@@ -257,8 +257,8 @@ Example:
         <ll-token-field id="tags" tags='{{tags}}' placeholder="Click 'tab' to enter a tag..."></ll-token-field>
 
         <div class="image-actions no-select">
-          <button hidden$="{{isDefault}}" id="default-image" class="btn btn-link pull-left" on-tap="makeDefaultImage">SET AS DEFAULT</button>
-          <div hidden$="{{!isDefault}}" id="default-image-label" class="pull-left">DEFAULT IMAGE</div>
+          <button hidden$="{{isDefault}}" id="default-image" class="btn btn-link pull-left" on-tap="makeDefaultImage">SET AS PRIMARY</button>
+          <div hidden$="{{!isDefault}}" id="default-image-label" class="pull-left">PRIMARY IMAGE</div>
           <button id="delete-image" class="btn btn-link pull-right" on-tap='deleteImage'>DELETE</button>
         </div>
 
