@@ -73,7 +73,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
       expect(changes).to.have.deep.property('imgId');
       expect(changes).to.have.deep.property('sortOrder');
       expect(changes).to.have.deep.property('fileName');
-      expect(changes).to.have.deep.property('isDefault');
+      expect(changes).to.have.deep.property('isPrimary');
       expect(changes).to.be.eql({
         dirty: false,
         imgId: '123456',
@@ -82,7 +82,7 @@ describe('<ll-property-image> - Optional Inputs', function() {
         tags: ['Rufus', 'Garfield', 'Beavis'],
         sortOrder: 2,
         fileName: "dc134145.jpg",
-        isDefault: true
+        isPrimary: true
       });
     });
 
